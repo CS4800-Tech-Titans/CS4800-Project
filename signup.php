@@ -6,23 +6,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST["username"];
     $password = $_POST["password"];
 
-    // Replace this with our actual user authentication logic (e.g., database query)
-    if ($username === "user" && $password === "password") {
-        // Authentication successful; set a session variable and redirect to the dashboard
-        $_SESSION["username"] = $username;
-        header("Location: dashboard.php");
-        exit();
-    } else {
-        $error_message = "Invalid username or password.";
-    }
+    // Replace this with our actual user registration logic (e.g., database insert)
+    // We might also want to hash the password before storing it.
+    // Example: $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
+    // After successful registration, set a session variable and redirect to the dashboard
+    $_SESSION["username"] = $username;
+    header("Location: dashboard.php");
+    exit();
 }
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Login</title>
+    <title>Sign Up</title>
     <style>
-        /* CSS styles for the login page */
+        /* CSS styles for the sign-up page */
         body {
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
@@ -81,8 +80,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 <body>
     <div class="container">
-        <h2>Login</h2>
-        <form method="POST" action="login.php">
+        <h2>Sign Up</h2>
+        <form method="POST" action="register.php">
             <div class="form-group">
                 <label for="username">Username:</label>
                 <input type="text" id="username" name="username" required>
@@ -94,10 +93,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
 
             <div class="form-group">
-                <input type="submit" value="Login">
+                <input type="submit" value="Sign Up">
             </div>
         </form>
-        <p>Don't have an account? <a href="signup.php">Sign up</a></p>
+        <p>Already have an account? <a href="index.php">Login</a></p>
     </div>
 </body>
 </html>
