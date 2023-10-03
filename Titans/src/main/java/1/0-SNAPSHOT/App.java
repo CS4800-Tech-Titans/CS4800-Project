@@ -10,4 +10,9 @@ public class App
     {
         System.out.println( "Hello World!" );
     }
+
+    public static int calculateSquare(int number) {
+        return number * number;
+    }
+
 }
