@@ -8,19 +8,31 @@ class ComposerStaticInit4bc46e61aebecf62970fa9c0e6714e62
 {
     public static $files = array (
         '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
+        '253c157292f75eb38082b5acb06f3f01' => __DIR__ . '/..' . '/nikic/fast-route/src/functions.php',
         'ec07570ca5a812141189b1fa81503674' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Assert/Functions.php',
     );
 
     public static $prefixLengthsPsr4 = array (
+        'S' => 
+        array (
+            'Slim\\' => 5,
+        ),
         'P' => 
         array (
             'Psr\\Log\\' => 8,
+            'Psr\\Http\\Server\\' => 16,
+            'Psr\\Http\\Message\\' => 17,
+            'Psr\\Container\\' => 14,
             'PhpParser\\' => 10,
         ),
         'M' => 
         array (
             'MyApp\\' => 6,
             'Monolog\\' => 8,
+        ),
+        'F' => 
+        array (
+            'FastRoute\\' => 10,
         ),
         'D' => 
         array (
@@ -30,9 +42,27 @@ class ComposerStaticInit4bc46e61aebecf62970fa9c0e6714e62
     );
 
     public static $prefixDirsPsr4 = array (
+        'Slim\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/slim/slim/Slim',
+        ),
         'Psr\\Log\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/log/src',
+        ),
+        'Psr\\Http\\Server\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/http-server-handler/src',
+            1 => __DIR__ . '/..' . '/psr/http-server-middleware/src',
+        ),
+        'Psr\\Http\\Message\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/http-factory/src',
+            1 => __DIR__ . '/..' . '/psr/http-message/src',
+        ),
+        'Psr\\Container\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/container/src',
         ),
         'PhpParser\\' => 
         array (
@@ -45,6 +75,10 @@ class ComposerStaticInit4bc46e61aebecf62970fa9c0e6714e62
         'Monolog\\' => 
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
+        ),
+        'FastRoute\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/nikic/fast-route/src',
         ),
         'Doctrine\\Instantiator\\' => 
         array (
