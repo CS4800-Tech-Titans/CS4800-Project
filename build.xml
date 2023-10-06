@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="MyPHPProject" default="build">
+
+    <!-- Define properties (variables) -->
+    <property file="composer.json" prefix="composer." override="true"/>
+    <property name="project.dir" value="D:/VSCode/VSCode_Projects/PHP_Projects/CS4800-Project"/>
+    <property name="src.dir" value="${project.dir}/src"/>
+    <property name="build.dir" value="${project.dir}/build"/>
+    <property name="dist.dir" value="${project.dir}/dist"/>
+
+    <!-- Create src directory if it doesn't exist -->
+    <target name="create-src-directory">
+        <mkdir dir="${src.dir}"/>
+    </target>
+
+    <!-- Create build directory if it doesn't exist -->
+    <target name="create-build-directory">
+        <mkdir dir="${build.dir}"/>
+    </target>
+
+    <!-- Create dist directory if it doesn't exist -->
+    <target name="create-dist-directory">
+        <mkdir dir="${dist.dir}"/>
+    </target>
+
+    <!-- Clean task: Deletes build artifacts -->
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+        <delete dir="${dist.dir}"/>
+    </target>
+
+    <!-- Install Composer Dependencies -->
+    <target name="install-composer-dependencies" depends="create-src-directory">
+        <exec command="composer install" dir="${project.dir}"/>
+    </target>
+
+    <!-- Run PHPUnit tests -->
+    <target name="test" depends="install-composer-dependencies">
+        <exec command="composer test" dir="${project.dir}"/>
+    </target>
+
+    <!-- Create a distribution package -->
+    <target name="package" depends="test, create-dist-directory">
+        <zip destfile="${dist.dir}/${composer.name}.zip">
+            <fileset dir="${src.dir}"/>
+            <!-- Add other project files as needed -->
+        </zip>
+    </target>
+
+    <!-- Default target: Executes the build process -->
+    <target name="build" depends="create-src-directory, create-build-directory, clean, package"/>
+
+</project>
