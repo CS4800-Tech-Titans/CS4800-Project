@@ -27,4 +27,19 @@ class LoginTest extends TestCase {
         // Check if an error message is displayed
         $this->assertStringContainsString("Invalid username or password.", $error_message);
     }
+
+    public function testMissingUsername() {
+        // Simulate a login attempt without providing a username
+        $_POST["password"] = "password";
+
+        // Include login script
+        include 'index.php';
+
+        // Check if an error message is displayed for missing username
+        $this->assertStringContainsString("Username is required.", $error_message);
+    }
+
+
 }
+
+
