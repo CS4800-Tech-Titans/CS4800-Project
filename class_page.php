@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_URI'] === '/your-endpoint') {
             // Include the CSS code as-is
             include 'styles.css';
             ?>
-            
+
             /* Add custom CSS for arranging the profile cards side by side */
             .profile-container {
                 display: flex;
@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_URI'] === '/your-endpoint') {
         </style>
     </head>
     <body>
-        <h1>Profile Page</h1>
+        <h1>Class Page</h1>
         <div class="profile-container">
             <?php
             // Include the HTML code for the first profile card
