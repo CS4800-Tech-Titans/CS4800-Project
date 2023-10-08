@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Sidebar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #menu-toggle {
+            color: white;
+        }
+        #sidebar {
+            height: 100%;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: -250px;
+            background-color: #444;
+            overflow-x: hidden;
+            transition: 0.3s;
+        }
+
+        #sidebar.open {
+            left: 0;
+        }
+
+        #sidebar .logo {
+            padding: 20px;
+            text-align: center;
+            background-color: #444;
+            color: #fff;
+        }
+
+        #sidebar ul {
+            padding: 0;
+            list-style-type: none;
+        }
+
+        #sidebar ul li {
+            padding: 10px;
+            text-align: center;
+        }
+
+        #sidebar ul li a {
+            color: #fff;
+            text-decoration: none;
+            display: block;
+        }
+
+        #sidebar ul li a:hover {
+            background-color: #555;
+        }
+
+        #menu-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            cursor: pointer;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <div id="sidebar">
+        <div class="logo">
+            Sidebar
+        </div>
+        <ul>
+            <li><a href="#">Profile Page</a></li>
+            <li><a href="#">Class Page</a></li>
+            <li><a href="#">Group Page</a></li>
+            <li><a href="#">Logout</a></li>
+        </ul>
+    </div>
+
+    <div id="menu-toggle">&#9776;</div>
+
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const menuToggle = document.getElementById('menu-toggle');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+        });
+    </script>
+</body>
+</html>

@@ -19,6 +19,9 @@ if ($_SERVER['REQUEST_URI'] === '/your-endpoint') {
     echo 'Hello, this is your endpoint!';
 } else {
     // Include the HTML code for the web page
+    include 'sidebar.html'; // Include the sidebar here
+
+    // Rest of your HTML code
     ?>
     <!DOCTYPE html>
     <html lang="en">
@@ -42,7 +45,8 @@ if ($_SERVER['REQUEST_URI'] === '/your-endpoint') {
              /* Add CSS to change the text color of the title to white */
              h1 {
                 color: white;
-            }
+                margin-left: 100px; /* Adjust the left margin to avoid overlap */
+             }
         </style>
     </head>
     <body>
