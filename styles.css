@@ -18,6 +18,12 @@ body{
     width: 100%;
     border-radius: 5px 5px 0 0;
   }
+  .class-photo{
+    background: url(https://media.gcflearnfree.org/content/55e0730c7dd48174331f5164_01_17_2014/whatisacomputer_pc.jpg);
+    height: 160px;
+    width: 100%;
+    border-radius: 5px 5px 0 0;
+  }
   .profile{
     height: 120px;
     width: 120px;
@@ -69,3 +75,25 @@ body{
     color: #03bfbc;
   }
   
+
+  .class-name{
+    text-align: center;
+    font-size: 25px;
+    font-weight: bold;
+  }
+  .student-count{
+    text-align: center;
+    margin-top: 35px;
+    line-height: 21px;
+  }
+
+  .delete-btn{
+    margin-left: 10px;
+    background: transparent;
+    color: #02899c;
+  }
+  .delete-btn:hover{
+    color: #231e39;
+    background: #03bfbc;
+    transition: .5s;
+  }

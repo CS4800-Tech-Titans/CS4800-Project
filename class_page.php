@@ -54,15 +54,15 @@ if ($_SERVER['REQUEST_URI'] === '/your-endpoint') {
         <div class="profile-container">
             <?php
             // Include the HTML code for the first profile card
-            include 'profile.html';
-            include 'profile.html';
-            include 'profile.html';
+            include 'class_card.html';
+            include 'class_card.html';
+            include 'class_card.html';
             ?>
         </div>
         <div class="profile-container">
             <?php
             // Include the HTML code for the second profile card
-            include 'profile.html';
+            include 'class_card.html';
             ?>
         </div>
     </body>
