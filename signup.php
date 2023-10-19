@@ -1,27 +1,95 @@
 <?php
-session_start();
+//session_start();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
     // Get input data
-    $username = $_POST["username"];
+    $email = $_POST["email"];
     $password = $_POST["password"];
+    $cPassword = $_POST["cPassword"];
+    $name = $_POST["name"];
 
-    // Replace this with our actual user registration logic (e.g., database insert)
-    // We might also want to hash the password before storing it.
-    // Example: $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+    if ($password != $cPassword) {
+        echo "Error: Passwords do not match.";
+    } else {
 
-    // After successful registration, set a session variable and redirect to the dashboard
-    $_SESSION["username"] = $username;
-    header("Location: dashboard.php");
-    exit();
+
+        // Validate password strength
+        $uppercase = preg_match('@[A-Z]@', $password);
+        $lowercase = preg_match('@[a-z]@', $password);
+        $number = preg_match('@[0-9]@', $password);
+
+        if (!($uppercase || $lowercase) || !$number || strlen($password) < 8) {
+            echo 'Error: Password should be at least 8 characters in length, should include at least one uppercase or lowercase letter, and at least one number.';
+        } else {
+            // Strong enough password
+            $hashedPass = password_hash($password, PASSWORD_DEFAULT);
+
+
+            $servername = "localhost";
+            $dbname = "id21308218_backenddatabase";
+            $dbuser = "id21308218_admin";
+            $dbpass = "cs4800project!!YuSun";
+            $conn = new mysqli($servername, $dbuser, $dbpass, $dbname);
+
+            $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
+            $stmt->bind_param("s", $email);
+
+            $stmt->execute();
+
+            $stmt->bind_result($column1, $column2, $column3, $column4 /* and so on for all columns */);
+
+            // Fetch and process the results
+            if ($stmt->fetch()) {
+                echo "Error: User already exists.";
+            } else {
+                $stmt = $conn->prepare("INSERT INTO users (email, name, password) VALUES (?, ?, ?)");
+                $stmt->bind_param("sss", $email, $name, $hashedPass);
+                $stmt->execute();
+
+                echo "You have successfully signed up.\n";
+
+                //echo password_hash($password, PASSWORD_DEFAULT);
+            }
+
+        }
+
+    }
+
+    //$stmt = $conn->prepare("INSERT INTO users (email, name, password) VALUES (?, ?, ?)");
+    //$stmt->bind_param("sss", $email, $name, $password);
+
+    // set parameters and execute
+    //$firstname = "John";
+    //$lastname = "Doe";
+    //$email = "john@example.com";
+    //$stmt->execute();
+
+    //$sql = "SELECT id, firstname, lastname FROM MyGuests";
+    //$result = $conn->query($sql);
+
+    // Replace this with our actual user authentication logic (e.g., database query)
+    //if ($email === "user" && $password === "password") {
+    // Authentication successful; set a session variable and redirect to the dashboard
+    //$_SESSION["username"] = $username;
+    //header("Location: dashboard.php");
+    //exit();
+    //} else {
+    //    echo "THIS IS A TEST";
+    //$error_message = "Invalid username or password.";
+    //}
+}
+if ($_SERVER["REQUEST_METHOD"] == "GET") {
+    echo "lol";
 }
 ?>
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>Sign Up</title>
+    <title>Login</title>
     <style>
-        /* CSS styles for the sign-up page */
+        /* CSS styles for the login page */
         body {
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
@@ -78,13 +146,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     </style>
 </head>
+
 <body>
     <div class="container">
-        <h2>Sign Up</h2>
-        <form method="POST" action="register.php">
+        <h2>Create New Account</h2>
+        <form method="POST" action="signup.php">
             <div class="form-group">
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" required>
+                <label for="email">Email:</label>
+                <input type="text" id="email" name="email" required>
             </div>
 
             <div class="form-group">
@@ -93,10 +162,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
 
             <div class="form-group">
-                <input type="submit" value="Sign Up">
+                <label for="cPassword">Confirm Password:</label>
+                <input type="password" id="cPassword" name="cPassword" required>
+            </div>
+
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Login">
             </div>
         </form>
-        <p>Already have an account? <a href="index.php">Login</a></p>
     </div>
 </body>
+
 </html>
