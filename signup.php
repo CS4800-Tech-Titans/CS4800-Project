@@ -1,5 +1,5 @@
 <?php
-//session_start();
+session_start();
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -41,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             $stmt->execute();
 
-            $stmt->bind_result($column1, $column2, $column3, $column4 /* and so on for all columns */);
+            $stmt->bind_result($userId, $column2, $column3, $column4 /* and so on for all columns */);
 
             // Fetch and process the results
             if ($stmt->fetch()) {
@@ -51,8 +51,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $stmt->bind_param("sss", $email, $name, $hashedPass);
                 $stmt->execute();
 
-                echo "You have successfully signed up.\n";
-
+                //echo "You have successfully signed up.\n";
+                header("Location: dashboard.php");
+                $_SESSION["userId"] = $conn->insert_id;//$userId;
+                $_SESSION["name"] = $name; 
+                $_SESSION["email"] = $email; 
                 //echo password_hash($password, PASSWORD_DEFAULT);
             }
 
@@ -91,7 +94,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
 <html>
 
 <head>
-    <title>Login</title>
+    <title>Sign Up</title>
     <style>
         /* CSS styles for the login page */
         body {

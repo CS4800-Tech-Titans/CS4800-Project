@@ -1,15 +1,53 @@
 <?php
 session_start();
 
-// THIS IS A PLACE HOLDER FILE FOR NOW. THIS ISNT OUR REAL LOGIN PAGE. OUR LOGIN PAGE IS LOGIN.PHP. JUST KEEP THIS FOR GRADING, UNTIL WE UPDATE IT WITH A REAL FRONT PAGE.
-
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get input data
-    $username = $_POST["username"];
+
+    $email = $_POST["email"];
     $password = $_POST["password"];
 
-    // Replace this with our actual user authentication logic (e.g., database query)
+
+    $servername = "localhost";
+    $dbname = "backendDatabase";
+    $dbuser = "admin";
+    $dbpass = "password"; // i know this looks bad, and looks unsecure and stuff. i dont care right now. sql cant be accessed from the internet anyways.
+    
+    $conn = new mysqli($servername, $dbuser, $dbpass, $dbname);
+
+    $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
+    $stmt->bind_param("s", $email);
+
+    $stmt->execute();
+
+    $stmt->bind_result($userId, $userName, $column3, $userHashedPass /* and so on for all columns */);
+
+    // Fetch and process the results
+    if (!$stmt->fetch()) {
+        echo "Error: User with email '$email' does not exist.";
+    } 
+    else 
+    {
+        //$hashedPass = password_hash($password, PASSWORD_DEFAULT);
+        if (!password_verify($password,$userHashedPass))
+        {
+            echo "Error: Password does not match.";
+        }
+        else
+        {
+            $_SESSION["userId"] = $userId;
+            $_SESSION["name"] = $userName; 
+            $_SESSION["email"] = $email; 
+            header("Location: dashboard.php");
+        }
+    }
+
+
+
+
+
+
+    /*// Replace this with our actual user authentication logic (e.g., database query)
     if ($username === "user" && $password === "password") {
         // Authentication successful; set a session variable and redirect to the dashboard
         $_SESSION["username"] = $username;
@@ -17,7 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     } else {
         $error_message = "Invalid username or password.";
-    }
+    }*/
 }
 ?>
 <!DOCTYPE html>
@@ -87,8 +125,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <h2>Login</h2>
         <form method="POST" action="login.php">
             <div class="form-group">
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" required>
+                <label for="email">Email:</label>
+                <input type="text" id="email" name="email" required>
             </div>
 
             <div class="form-group">

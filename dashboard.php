@@ -1,7 +1,7 @@
 <?php
 session_start();
-if (!isset($_SESSION["username"])) {
-    header("Location: index.php"); // Redirect to the login page if not authenticated
+if (!isset($_SESSION["userId"])) {
+    header("Location: login.php"); // Redirect to the login page if not authenticated
     exit();
 }
 ?>
@@ -42,7 +42,7 @@ if (!isset($_SESSION["username"])) {
 </head>
 <body>
     <div class="container">
-        <h2>Welcome, <?php echo $_SESSION["username"]; ?>!</h2>
+        <h2>Welcome, <?php echo $_SESSION["name"]; ?>!</h2>
         <p>This is the dashboard. You are now authenticated.</p>
         <p><a href="logout.php">Logout</a></p>
     </div>
