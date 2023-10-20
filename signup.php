@@ -1,5 +1,8 @@
 <?php
 //session_start();
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
@@ -27,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
             $servername = "localhost";
-            $dbname = "backenddatabase";
+            $dbname = "backendDatabase";
             $dbuser = "admin";
             $dbpass = "password"; // i know this looks bad, and looks unsecure and stuff. i dont care right now. sql cant be accessed from the internet anyways.
             
