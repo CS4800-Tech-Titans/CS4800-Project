@@ -27,9 +27,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
             $servername = "localhost";
-            $dbname = "id21308218_backenddatabase";
-            $dbuser = "id21308218_admin";
-            $dbpass = "cs4800project!!YuSun";
+            $dbname = "backenddatabase";
+            $dbuser = "admin";
+            $dbpass = "password"; // i know this looks bad, and looks unsecure and stuff. i dont care right now. sql cant be accessed from the internet anyways.
+            
             $conn = new mysqli($servername, $dbuser, $dbpass, $dbname);
 
             $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
@@ -80,7 +81,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     //}
 }
 if ($_SERVER["REQUEST_METHOD"] == "GET") {
-    echo "lol";
+    //echo "lol";
 }
 ?>
 <!DOCTYPE html>
