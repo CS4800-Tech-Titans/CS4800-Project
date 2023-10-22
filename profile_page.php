@@ -38,6 +38,7 @@ if ($_SERVER['REQUEST_URI'] === '/your-endpoint') {
             /* Add custom CSS for arranging the profile cards side by side */
             .profile-container {
                 display: flex;
+                flex-wrap: wrap;
                 justify-content: space-between;
                 margin: 20px; /* Adjust the margin as needed */
             }

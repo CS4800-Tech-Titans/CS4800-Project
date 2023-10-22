@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_URI'] === '/your-endpoint') {
             // Include the HTML code for the first profile card
             include 'class_card.html';
             include 'class_card.html';
-            include 'class_card.html';
+            //include 'class_card.html';
             ?>
         </div>
         <div class="profile-container">
