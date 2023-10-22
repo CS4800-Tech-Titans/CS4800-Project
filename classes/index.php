@@ -1,5 +1,28 @@
 <?php
-    $userProfiles = array(
+    include_once "../protected/ensureLoggedIn.php";
+    include_once "../protected/connSql.php";
+
+    $stmt = $conn->prepare("SELECT classes.id, classes.name, users.name FROM classes JOIN 
+    ( -- Your initial query that returns a list of classIds 
+        SELECT classId FROM linkUserClass WHERE userId = ? 
+    ) subquery 
+    ON classes.id = subquery.classId 
+    JOIN users 
+    ON classes.teacherId = users.id;");
+
+    $stmt->bind_param("s",  $_SESSION["userId"]);
+
+    $stmt->execute();
+
+    $stmt->bind_result($classId, $className, $teacherName /* and so on for all columns */);
+
+    // Fetch and process the results
+    //while ($stmt->fetch()) {
+    //    echo $className." with Teacher: ".$teacherName."---";
+    //}
+    //echo $conn;
+
+    /*$userProfiles = array(
         array(
             'name' => 'John Doe',
             'description' => 'This is the shorthand for flex-grow, flex-shrink and flex-basis combined. The
@@ -23,7 +46,7 @@
             // Add more profile information here
         ),
         // Add more profiles as needed
-    );           
+    );           */
 ?>
 
 <!--<link rel="stylesheet" type="text/css" href="style.css">-->
@@ -35,18 +58,18 @@
 <body translate="no">
     <h1 style="color:black;">My Classes</h1>
     <ul class="cards">
-        <?php foreach ($userProfiles as $profile): ?>
+        <?php while ($stmt->fetch()) { ?>
             <li class="cards__item">
-                <a href="http://www.google.com" class="card" outline=none>
+                <a href="<?=$classId?>" class="card" outline=none>
                     <div class="card__image card__image--fence"></div>
                     <div class="card__content">
-                        <div class="card__title"><?=$profile['name']?></div>
-                        <p class="card__text"><?=$profile['description']?></p>
+                        <div class="card__title"><?=$className?></div>
+                        <p class="card__text"><?=$teacherName?></p>
                         <!--<button class="btn btn--block card__btn">Button</button>-->
                     </div>
                 </a>
             </li>
-        <?php endforeach; ?>
+        <?php }; ?>
         <!--
         <li class="cards__item">
             <div class="card">
