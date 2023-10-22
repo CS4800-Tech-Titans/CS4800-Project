@@ -3,7 +3,7 @@
         'name' => 'vendor_name/phpproject',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'b5982b518a9cd51258080734950d9cc2ef672878',
+        'reference' => '2cfcb1ba90ed88e176f32189353b7d389533eeae',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -352,7 +352,7 @@
         'vendor_name/phpproject' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'b5982b518a9cd51258080734950d9cc2ef672878',
+            'reference' => '2cfcb1ba90ed88e176f32189353b7d389533eeae',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
