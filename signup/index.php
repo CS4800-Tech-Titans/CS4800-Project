@@ -11,6 +11,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST["password"];
     $cPassword = $_POST["cPassword"];
     $name = $_POST["name"];
+    $role = $_POST["role"];
 
     if ($password != $cPassword) {
         echo "Error: Passwords do not match.";
@@ -36,26 +37,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             
             $conn = new mysqli($servername, $dbuser, $dbpass, $dbname);
 
-            $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
+            $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
             $stmt->bind_param("s", $email);
 
             $stmt->execute();
 
-            $stmt->bind_result($userId, $column2, $column3, $column4 /* and so on for all columns */);
+            $stmt->bind_result($userId);//, $column2, $column3, $column4, $column /* and so on for all columns */);
 
             // Fetch and process the results
             if ($stmt->fetch()) {
                 echo "Error: User already exists.";
             } else {
-                $stmt = $conn->prepare("INSERT INTO users (email, name, password) VALUES (?, ?, ?)");
-                $stmt->bind_param("sss", $email, $name, $hashedPass);
+                $stmt = $conn->prepare("INSERT INTO users (email, name, password, role) VALUES (?, ?, ?, ?)");
+                $stmt->bind_param("sssi", $email, $name, $hashedPass, $role);
                 $stmt->execute();
 
                 //echo "You have successfully signed up.\n";
-                header("Location: dashboard.php");
+                header("Location: /dashboard");
                 $_SESSION["userId"] = $conn->insert_id;//$userId;
                 $_SESSION["name"] = $name; 
                 $_SESSION["email"] = $email; 
+                $_SESSION["role"] = $role; 
                 //echo password_hash($password, PASSWORD_DEFAULT);
             }
 
@@ -63,28 +65,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     }
 
-    //$stmt = $conn->prepare("INSERT INTO users (email, name, password) VALUES (?, ?, ?)");
-    //$stmt->bind_param("sss", $email, $name, $password);
-
-    // set parameters and execute
-    //$firstname = "John";
-    //$lastname = "Doe";
-    //$email = "john@example.com";
-    //$stmt->execute();
-
-    //$sql = "SELECT id, firstname, lastname FROM MyGuests";
-    //$result = $conn->query($sql);
-
-    // Replace this with our actual user authentication logic (e.g., database query)
-    //if ($email === "user" && $password === "password") {
-    // Authentication successful; set a session variable and redirect to the dashboard
-    //$_SESSION["username"] = $username;
-    //header("Location: dashboard.php");
-    //exit();
-    //} else {
-    //    echo "THIS IS A TEST";
-    //$error_message = "Invalid username or password.";
-    //}
 }
 if ($_SERVER["REQUEST_METHOD"] == "GET") {
     //echo "lol";
@@ -157,7 +137,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
 <body>
     <div class="container">
         <h2>Create New Account</h2>
-        <form method="POST" action="signup.php">
+        <form method="POST" action="">
             <div class="form-group">
                 <label for="email">Email:</label>
                 <input type="text" id="email" name="email" required>
@@ -178,8 +158,16 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
                 <input type="text" id="name" name="name" required>
             </div>
 
+            <label for="role">Account Type:</label>
+            <label>
+                <input type="radio" name="role" value="0" required> Student
+            </label>
+            <label>
+                <input type="radio" name="role" value="1" required> Teacher
+            </label>
+
             <div class="form-group">
-                <input type="submit" value="Login">
+                <input type="submit" value="Sign Up">
             </div>
         </form>
     </div>

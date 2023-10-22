@@ -1,9 +1,12 @@
 <?php
-session_start();
-if (!isset($_SESSION["userId"])) {
-    header("Location: login.php"); // Redirect to the login page if not authenticated
-    exit();
-}
+include_once "../protected/ensureLoggedIn.php";
+
+$roleStr = "";
+if ($_SESSION["role"] == 0 )
+    $roleStr = "Student";
+else if ($_SESSION["role"] == 1 )
+    $roleStr = "Teacher";
+
 ?>
 
 <!DOCTYPE html>
@@ -43,8 +46,9 @@ if (!isset($_SESSION["userId"])) {
 <body>
     <div class="container">
         <h2>Welcome, <?php echo $_SESSION["name"]; ?>!</h2>
-        <p>This is the dashboard. You are now authenticated.</p>
-        <p><a href="logout.php">Logout</a></p>
+        <p>This is the dashboard. You are now authenticated. You are a <?=$roleStr?>.</p>
+        <a href="/classes">Go to my classes</a>
+        <p><a href="/logout">Logout</a></p>
     </div>
 </body>
 </html>

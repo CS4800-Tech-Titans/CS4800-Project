@@ -20,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $stmt->execute();
 
-    $stmt->bind_result($userId, $userName, $column3, $userHashedPass /* and so on for all columns */);
+    $stmt->bind_result($userId, $userName, $column3, $userHashedPass, $userRole /* and so on for all columns */);
 
     // Fetch and process the results
     if (!$stmt->fetch()) {
@@ -38,7 +38,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION["userId"] = $userId;
             $_SESSION["name"] = $userName; 
             $_SESSION["email"] = $email; 
-            header("Location: dashboard.php");
+            $_SESSION["role"] = $userRole; 
+            header("Location: /dashboard");
         }
     }
 
@@ -123,7 +124,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
     <div class="container">
         <h2>Login</h2>
-        <form method="POST" action="login.php">
+        <form method="POST" action="">
             <div class="form-group">
                 <label for="email">Email:</label>
                 <input type="text" id="email" name="email" required>
@@ -138,7 +139,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <input type="submit" value="Login">
             </div>
         </form>
-        <p>Don't have an account? <a href="signup.php">Sign up</a></p>
+        <p>Don't have an account? <a href="/signup">Sign up</a></p>
     </div>
 </body>
 </html>

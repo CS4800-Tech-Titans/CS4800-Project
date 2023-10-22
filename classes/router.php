@@ -52,7 +52,8 @@ if (strpos($requestUri, $basePath) === 0) {
             {
                 // Handle the case where only the class ID is provided
                 // e.g., /classes/123
-                echo "Homepage!";
+                include_once "classHomepage.php";
+                //echo "Homepage!";
             }
         }
 
