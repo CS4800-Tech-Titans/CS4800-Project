@@ -2,23 +2,39 @@
     include_once "../protected/ensureLoggedIn.php";
     include_once "../protected/connSql.php";
 
-    $stmt = $conn->prepare("SELECT classes.id, classes.name, users.name FROM classes JOIN 
-    ( 
-        SELECT classId FROM linkUserClass WHERE userId = ? 
-    ) subquery 
-    ON classes.id = subquery.classId 
-    JOIN users 
-    ON classes.teacherId = users.id;");
+    if ($_SESSION["role"] == 0) // student role
+    {
+        $stmt = $conn->prepare("SELECT classes.id, classes.name, users.name FROM classes JOIN 
+        ( 
+            SELECT classId FROM linkUserClass WHERE userId = ? 
+        ) subquery 
+        ON classes.id = subquery.classId 
+        JOIN users 
+        ON classes.teacherId = users.id;");
 
-    // SQL query here gets the classes that the user is in, the name of the classes, and the name of the teacher. 
-    // Inner subquery gets the list of class IDs assosciated with the user, and the first join joins it with the class table
-    // Second join adds the column for the teacher's name. 
+        // SQL query here gets the classes that the user is in, the name of the classes, and the name of the teacher. 
+        // Inner subquery gets the list of class IDs assosciated with the user, and the first join joins it with the class table
+        // Second join adds the column for the teacher's name. 
 
-    $stmt->bind_param("s",  $_SESSION["userId"]);
+        $stmt->bind_param("s",  $_SESSION["userId"]);
 
-    $stmt->execute();
+        $stmt->execute();
 
-    $stmt->bind_result($classId, $className, $teacherName);
+        $stmt->bind_result($classId, $className, $teacherName);
+    }
+    else if ($_SESSION["role"] == 1) 
+    {
+        $stmt = $conn->prepare("SELECT classes.id, classes.name FROM `classes` WHERE classes.teacherId = ?;");
+
+        // SQL query here gets the classes that the user is teacher of, since this user is a teacher (role is 1). Nice simple query. 
+
+        $stmt->bind_param("s",  $_SESSION["userId"]);
+
+        $stmt->execute();
+
+        $stmt->bind_result($classId, $className);
+        $teacherName = "";
+    }
     
     $classCount = 0;
 ?>

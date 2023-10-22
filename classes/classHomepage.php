@@ -2,22 +2,40 @@
     include_once "../protected/ensureLoggedIn.php";
     include_once "../protected/connSql.php";
 
-    $stmt = $conn->prepare("SELECT classes.name, classes.description, classes.teacherId, users.name FROM `classes`
-    JOIN users 
-    ON classes.teacherId = users.id
-    JOIN linkUserClass
-    ON linkUserClass.userId = ? AND linkUserClass.classId = ?
-    WHERE classes.id = ?;");
+    if ($_SESSION["role"] == 0)
+    {
 
-    // Fat SQL statement query. Gets the name of the class, description, and info on the teacher. First join adds the teacher description to the result. 
-    // Second join ensures that the user is actually a part of that class, by checking the junction table.
-    // If the user is part of the class, it returns the row of data. If not, then nothing gets returned, which is caught by the if statement on fetch below.
+        $stmt = $conn->prepare("SELECT classes.name, classes.description, classes.teacherId, users.name FROM `classes`
+        JOIN users 
+        ON classes.teacherId = users.id
+        JOIN linkUserClass
+        ON linkUserClass.userId = ? AND linkUserClass.classId = ?
+        WHERE classes.id = ?;");
 
-    $stmt->bind_param("iii", $_SESSION["userId"], $classId, $classId);
+        // Fat SQL statement query. Gets the name of the class, description, and info on the teacher. First join adds the teacher description to the result. 
+        // Second join ensures that the user is actually a part of that class, by checking the junction table.
+        // If the user is part of the class, it returns the row of data. If not, then nothing gets returned, which is caught by the if statement on fetch below.
 
-    $stmt->execute();
+        $stmt->bind_param("iii", $_SESSION["userId"], $classId, $classId);
 
-    $stmt->bind_result($className, $classDescription, $teacherId, $teacherName /* and so on for all columns */);
+        $stmt->execute();
+
+        $stmt->bind_result($className, $classDescription, $teacherId, $teacherName);
+
+    }
+    else if ( $_SESSION["role"] == 1)
+    {
+        $stmt = $conn->prepare("SELECT classes.name, classes.description FROM `classes` WHERE classes.id = ? AND classes.teacherId = ?;");
+
+        // Simpler SQL query. Gets name of class and description. If the class in question doesnt actually belong to this teacher, nothing is returned. 
+        $stmt->bind_param("ii", $classId, $_SESSION["userId"]);
+
+        $stmt->execute();
+
+        $stmt->bind_result($className, $classDescription);
+        $teacherId = $_SESSION["userId"];
+        $teacherName = $_SESSION["name"];
+    }
 
     if (!$stmt->fetch()) // if the result is empty, then either this class does not exist, or the user is not a member of this class. Show them 404 in this case.
     {
