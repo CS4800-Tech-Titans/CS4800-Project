@@ -10,7 +10,7 @@ if (count($groupSegments) > 0)
 
 if ($groupId == "") 
 {
-    include "index.php";
+    include $_SERVER['DOCUMENT_ROOT']."/classes/groups/index.php";
 }
 else if (!is_numeric($groupId))
 {

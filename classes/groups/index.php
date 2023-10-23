@@ -4,7 +4,7 @@
 
     if ($_SESSION["role"] == 0) // student role
     {
-        $stmt = $conn->prepare("SELECT groups.id, groups.name, groups.description, groups.photo FROM groups 
+        $stmt = $conn->prepare("SELECT groups.id, groups.name, groups.description, groups.photo FROM `groups` 
                                 JOIN linkUserClass 
                                 ON linkUserClass.userId = ? 
                                 AND linkUserClass.classId = ? 
