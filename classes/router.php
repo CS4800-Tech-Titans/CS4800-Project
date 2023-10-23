@@ -17,8 +17,16 @@ if (strpos($requestUri, $basePath) === 0) {
     // Split the subpath into segments
     $segments = explode('/', trim($subPath, '/'));
 
+
+
+    /*foreach ($segments as $item) {
+        echo gettype($item);
+        echo ":".$item."-----";
+    }*/
+
     // Handle routing based on the segments
-    if (count($segments) > 0) {
+    if (count($segments) > 0) 
+    {
         $classId = $segments[0];
 
         //echo "------classId: ".$classId;
@@ -43,8 +51,19 @@ if (strpos($requestUri, $basePath) === 0) {
                     case 'users':
                         // Handle the users action for the class
                         break;
+                    case 'groups':
+                        $groupSegments = array_slice($segments, 2);
+                        include_once "groups/router.php";
+                        //if (count($segments) > 2)
+                        //{
+                        //    $groupId = $segments[2];
+                            //echo $groupId;
+                        //}
+                        break;
                     default:
-                        // Handle other actions or show a 404 page
+                        http_response_code(404); 
+                        include_once("404.html");
+                        die();
                         break;
                 }
             } 
