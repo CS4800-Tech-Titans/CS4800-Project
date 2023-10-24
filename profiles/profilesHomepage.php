@@ -44,8 +44,6 @@
         die();
     }
 
-   
-
 ?>
 
 <!--<link rel="stylesheet" type="text/css" href="style.css">-->
@@ -55,15 +53,9 @@
 </style>
 
 <body translate="no">
-    <h1><br></h1>
     <h1 style="color:black;"><?=$className?></h1>
     <p style="color:black;">Instructor: <?=$teacherName?></p>
     <p style="color:black;"><?=$classDescription?></p>
     
     
 </body>
-
-<?php
-     include_once "groups/index.php";
-     include "../sidebar.html";
-?>

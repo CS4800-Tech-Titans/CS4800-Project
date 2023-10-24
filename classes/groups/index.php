@@ -42,6 +42,32 @@
 <style>
     <?php include "style.css"?>
 </style>
+<style>
+    /* Add custom CSS for the plus button */
+    .add-group-button {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        background-color: #000; /* Black background color */
+        border: none;
+        border-radius: 50%;
+        color: #FFF;
+        font-size: 24px;
+        text-align: center;
+        line-height: 50px;
+        cursor: pointer;
+        transition: background-color 0.3s; /* Add a smooth transition effect */
+    }
+
+    /* Hover effect: Display "Add Group" on hover */
+    .add-group-button:hover {
+        background-color: #007BFF; /* Change the background color on hover */
+        content: "Add Group"; /* Add the text on hover */
+    }
+</style>
+
 
 <body translate="no">
     <h2 style="color:black;">Groups</h2>
@@ -68,7 +94,20 @@
             <?php
         } 
         ?>
+       <!-- Plus button to create a new group with a tooltip -->
+        <button class="add-group-button" id="createGroupButton" title="Add Group">+</button>
+
 
     </ul>
-    
+    <script>
+    // JavaScript to handle the create group button click
+    document.getElementById('createGroupButton').addEventListener('click', function () {
+        // Redirect the user to a new group creation page or display a form for creating a new group
+        window.location.href = '/create_group.php';
+    });
+</script>
 </body>
+
+<?php
+    //include "../sidebar.html";
+?>

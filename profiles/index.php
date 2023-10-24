@@ -45,9 +45,7 @@
     <?php include "style.css"?>
 </style>
 
-
 <body translate="no">
-    <h1><br></h1>
     <h1 style="color:black;">My Classes</h1>
     <ul class="cards">
         <?php while ($stmt->fetch()) 
@@ -76,7 +74,3 @@
     </ul>
     
 </body>
-
-<?php
-    include "../sidebar.html";
-?>

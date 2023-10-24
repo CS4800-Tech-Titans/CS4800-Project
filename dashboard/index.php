@@ -52,3 +52,7 @@ else if ($_SESSION["role"] == 1 )
     </div>
 </body>
 </html>
+
+<?php
+    include "../sidebar.html";
+?>

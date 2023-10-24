@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $dbuser = "admin";
     $dbpass = "password"; // i know this looks bad, and looks unsecure and stuff. i dont care right now. sql cant be accessed from the internet anyways.
     
-    $conn = new mysqli($servername, $dbuser, $dbpass, $dbname);
+    $conn = new mysqli($servername, $dbuser, $dbpass, $dbname, 3307);
 
     $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
     $stmt->bind_param("s", $email);

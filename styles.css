@@ -97,3 +97,27 @@ body{
     background: #03bfbc;
     transition: .5s;
   }
+
+  /* Add custom CSS for the plus button */
+  .add-group-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    background-color: #000; /* Black background color */
+    border: none;
+    border-radius: 50%;
+    color: #FFF;
+    font-size: 24px;
+    text-align: center;
+    line-height: 50px;
+    cursor: pointer;
+    transition: background-color 0.3s; /* Add a smooth transition effect */
+}
+
+/* Hover effect: Display "Add Group" on hover */
+.add-group-button:hover {
+    background-color: #007BFF; /* Change the background color on hover */
+    content: "Add Group"; /* Add the text on hover */
+}
