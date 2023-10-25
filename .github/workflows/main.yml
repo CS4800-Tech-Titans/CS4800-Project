@@ -1,0 +1,24 @@
+name: Update Apache Web Folder
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Run commands to clone the new github repository
+      uses: appleboy/ssh-action@v0.1.9
+      with:
+        host: groupup.pro
+        username: ec2-user
+        key: ${{ secrets.KEY }}
+        port: 22
+        script: |
+          sudo rm -rf /var/www/html/CS4800-Project; sudo git clone https://github.com/CS4800-Tech-Titans/CS4800-Project /var/www/html/CS4800-Project
