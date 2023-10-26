@@ -170,6 +170,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
                 <input type="submit" value="Sign Up">
             </div>
         </form>
+        <p>Already have an account? <a href="/login">Log In</a></p>
     </div>
 </body>
 
