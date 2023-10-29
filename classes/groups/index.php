@@ -72,42 +72,42 @@
 <body translate="no">
     <h2 style="color:black;">Groups</h2>
     <ul class="cards">
-        <?php while ($stmt->fetch()) 
-        { 
-            $groupCount++;?>
+        <?php while ($stmt->fetch()) { 
+            $groupCount++;
+        ?>
             <li class="cards__item">
                 <a href="/classes/<?=$classId?>/groups/<?=$groupId?>" class="card" outline=none>
                     <div class="card__image card__image--fence"></div>
                     <div class="card__content">
                         <div class="card__title"><?=$groupName?></div>
                         <p class="card__text"><?=$groupDescription?></p>
-                        <!--<button class="btn btn--block card__btn">Button</button>-->
+                        <button class="join-group-button" data-group-id="<?=$groupId?>">Join</button>
                     </div>
                 </a>
             </li>
-        <?php 
-        };
-        if ($groupCount == 0)
-        {
-            ?>
-                <p style="color:black">There are no groups in this class.</p>
-            <?php
-        } 
-        ?>
-       <!-- Plus button to create a new group with a tooltip -->
+        <?php } ?>
+        <?php if ($groupCount == 0) { ?>
+            <p style="color:black">There are no groups in this class.</p>
+        <?php } ?>
+        <!-- Plus button to create a new group with a tooltip -->
         <button class="add-group-button" id="createGroupButton" title="Add Group">+</button>
-
-
     </ul>
-    <script>
+</body>
+
+<script>
     // JavaScript to handle the create group button click
     document.getElementById('createGroupButton').addEventListener('click', function () {
         // Redirect the user to a new group creation page or display a form for creating a new group
         window.location.href = '/create_group.php';
     });
-</script>
-</body>
 
-<?php
-    //include "../sidebar.html";
-?>
+    // JavaScript to handle the join group button click
+    const joinButtons = document.querySelectorAll('.join-group-button');
+    joinButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            const groupId = button.getAttribute('data-group-id');
+            // Redirect the user to a page or API endpoint to join the selected group
+            window.location.href = `/join_group.php?group_id=${groupId}`;
+        });
+    });
+</script>

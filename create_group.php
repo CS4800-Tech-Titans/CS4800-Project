@@ -18,6 +18,7 @@
     <label for="groupPhoto">Group Photo:</label>
     <input type="file" id="groupPhoto" name="groupPhoto" accept="image/*">
     
+    <input type="hidden" name="userRole" value="<?php echo $_SESSION["role"]; ?>">
     <input type="hidden" name="classId" value="<?php echo $classId; ?>">
     
     <button type="submit">Create Group</button>
