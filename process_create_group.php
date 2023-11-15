@@ -17,8 +17,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $groupPhoto = null; // Set to null
         }
         
+
+        // Get the selected class from the dropdown (this works)
+        $selectedClass = $_POST["classId"];
+
+        $classId = $selectedClass;
+
+         // Display the selected class information
+         echo "<p>Selected Class ID: $selectedClass</p>";
+
+       // $classId = getClassId($selectedClass); // Implement getClassId function (this breaks)
+
+        // Display the selected class information
+        echo "<p>Selected Class ID454645: $classId</p>";
         // TODO: Replace this with the actual class ID
-        $classId = 1;
+        //$classId = 1;
         
         // Create an entry in the groups table
         $insertQuery = $conn->prepare("INSERT INTO groups (name, description, classId, photo) VALUES (?, ?, ?, ?)");
@@ -67,4 +80,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 $conn->close(); // Close the database connection
+
+function getClassId($selectedClass) {
+    include "./protected/connSql.php";
+
+    // TODO: Replace this query with your actual database query
+    $query = $conn->prepare("SELECT classes.id 
+                            FROM classes 
+                            JOIN linkuserclass ON classes.id = linkuserclass.classId
+                            WHERE classes.name = ? AND linkuserclass.userId = ?");
+    $query->bind_param("ss", $selectedClass, $_SESSION["userId"]);
+
+    $query->execute();
+    $query->bind_result($classId);
+
+    if ($query->fetch()) {
+        // Class found, return the classId
+        return $classId;
+    } else {
+        // Class not found, handle this according to your application logic
+        // For now, return 0; you might want to throw an exception or handle it differently
+        return 2;
+    }
+
+    $query->close();
+    $conn->close();
+}
 ?>
