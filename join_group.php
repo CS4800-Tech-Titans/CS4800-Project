@@ -1,36 +1,48 @@
 <?php
-include_once "../protected/ensureLoggedIn.php";
-include "../protected/connSql.php";
+session_start(); // Start a new or resume the existing session
 
-if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET["group_id"])) {
-    $groupId = $_GET["group_id"];
-    
-    // Check if the user is already in the group
-    $checkUserInGroup = $conn->prepare("SELECT 1 FROM linkUserGroup WHERE userId = ? AND groupId = ?");
-    $checkUserInGroup->bind_param("ii", $_SESSION["userId"], $groupId);
-    $checkUserInGroup->execute();
-    $checkUserInGroup->store_result();
+include "protected/connSql.php"; // Include the code to establish a database connection
 
-    if ($checkUserInGroup->num_rows > 0) {
-        // User is already in the group, handle accordingly (redirect or show a message)
-        echo "You are already a member of this group.";
-    } else {
-        // User is not in the group, insert a new entry
-        $insertUserInGroup = $conn->prepare("INSERT INTO linkUserGroup (userId, groupId, role) VALUES (?, ?, 0)");
-        $insertUserInGroup->bind_param("ii", $_SESSION["userId"], $groupId);
 
-        if ($insertUserInGroup->execute()) {
-            echo "You have successfully joined the group!";
+// Print to the console for debugging purposes
+error_log("I am in join_group");
+
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Check if the user is logged in and has a valid session
+    if (isset($_SESSION["userId"])) {
+        // Validate and sanitize user inputs
+        $groupId = $_POST["groupId"];
+
+        // Define the user ID (fetched from the session)
+        $userId = $_SESSION["userId"];
+        
+        // TODO: Replace this with the actual user role
+        $role = 1;
+
+        // Create an entry in the linkusergroup table
+        $linkInsertQuery = $conn->prepare("INSERT INTO linkusergroup (userId, groupId, role) VALUES (?, ?, ?)");
+
+        $linkInsertQuery->bind_param("iii", $userId, $groupId, $role);
+
+        // Check if the entry creation is successful
+        if ($linkInsertQuery->execute()) {
+            // Linkusergroup entry creation successful, redirect to a success page or back to the group listing
+            header("Location: /classes/{$classId}");
         } else {
-            echo "Failed to join the group. Please try again.";
+            // Error handling: Display an error message or redirect to an error page
+            echo "Failed to create a linkusergroup entry. Please try again.";
         }
 
-        $insertUserInGroup->close();
+        $linkInsertQuery->close(); // Close the prepared statement
+    } else {
+        // User is not logged in, handle the error
+        echo "Error: User ID is missing. Please log in and try again.";
     }
-
-    $checkUserInGroup->close();
 } else {
-    // Invalid request
-    echo "Invalid request.";
+    // Handle an invalid request (not a POST request)
+    echo "Invalid request method. Please use the form to join a group.";
 }
+
+$conn->close(); // Close the database connection
 ?>

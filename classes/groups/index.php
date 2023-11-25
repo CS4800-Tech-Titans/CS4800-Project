@@ -91,7 +91,7 @@ $groupCount = 0;
     </ul>
 
     <script>
-        // JavaScript to handle the join group button click
+       // JavaScript to handle the join group button click
         const joinButtons = document.querySelectorAll('.join-group-button');
         joinButtons.forEach(button => {
             button.addEventListener('click', function (event) {
@@ -103,8 +103,24 @@ $groupCount = 0;
                 // Change the color of the button to a random color
                 button.style.backgroundColor = getRandomColor();
 
-                // Redirect the user to a page or API endpoint to join the selected group
-                // window.location.href = `/join_group.php?group_id=${groupId}`;
+                // Display the groupId
+                console.log('Joining group: ' + groupId);
+
+                // Call join_group.php directly using AJAX
+                const xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        // Handle the response, if needed
+                        console.log('Join group response:', xhr.responseText);
+                    }
+                };
+                
+                // Define the parameters to send to join_group.php
+                const params = `groupId=${groupId}`;
+                
+                xhr.open('POST', '/join_group.php', true);
+                xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                xhr.send(params);
             });
         });
 
