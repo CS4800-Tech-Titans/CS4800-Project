@@ -112,6 +112,8 @@ $groupCount = 0;
                     if (xhr.readyState == 4 && xhr.status == 200) {
                         // Handle the response, if needed
                         console.log('Join group response:', xhr.responseText);
+                        // Refresh the page after the join is successful
+                        location.reload();
                     }
                 };
                 
