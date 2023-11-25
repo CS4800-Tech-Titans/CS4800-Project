@@ -94,6 +94,15 @@ else if ($_SESSION["role"] == 1)
 </body>
 
 <script>
+    // Function to generate a random color
+    function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
     document.addEventListener('DOMContentLoaded', function () {
         // JavaScript to handle the invite button click
         const inviteButtons = document.querySelectorAll('.invite-button');
@@ -107,6 +116,8 @@ else if ($_SESSION["role"] == 1)
                 // You can implement the logic to send an invite here
                 // For simplicity, I'm just logging the student name to the console
                 console.log('Inviting student: ' + studentName);
+                // Change the color of the button to a random color
+                button.style.backgroundColor = getRandomColor();
             });
         });
     });
