@@ -67,7 +67,7 @@ $groupCount = 0;
             $groupCount++;
         ?>
             <li class="cards__item">
-                <a href="/classes/<?=$classId?>/groups/<?=$groupId?>" class="card">
+                <a class="card" id="card<?=$groupId?>" onclick="navigateToURL(<?=$groupId?>, <?=$classId?>)">
                     <div class="card__image card__image--fence"></div>
                     <div class="card__content">
                         <div class="card__title"><?=$groupName?></div>
@@ -91,20 +91,6 @@ $groupCount = 0;
     </ul>
 
     <script>
-        // JavaScript to handle the card click
-        document.querySelectorAll('.card').forEach(function(card) {
-            card.addEventListener('click', function(event) {
-                // Check if the click was directly on the join button
-                const clickedElement = event.target;
-                if (!(clickedElement.classList.contains('join-group-button') || clickedElement.closest('.join-group-button'))) {
-                    // Add any other card click handling code here
-                    // For example, redirect to the card's link
-                    const cardLink = card.querySelector('a');
-                    window.location.href = cardLink.href;
-                }
-            });
-        });
-
         // JavaScript to handle the join group button click
         const joinButtons = document.querySelectorAll('.join-group-button');
         joinButtons.forEach(button => {
@@ -139,6 +125,17 @@ $groupCount = 0;
                 color += letters[Math.floor(Math.random() * 16)];
             }
             return color;
+        }
+
+        // Function to change the color of the card randomly and navigate to the specified URL
+        function navigateToURL(groupId, classId) {
+            // Change the color of the card (optional)
+            var randomColor = getRandomColor();
+            var card = document.getElementById("card" + groupId);
+            card.style.backgroundColor = randomColor;
+
+            // Navigate to the specified URL
+            window.location.href = "/classes/" + classId + "/groups/" + groupId;
         }
     </script>
 </body>
