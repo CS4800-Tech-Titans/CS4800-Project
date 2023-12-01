@@ -77,101 +77,64 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
     <title>Sign Up</title>
     <style>
         /* CSS styles for the login page */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-        }
-
-        .container {
-            text-align: center;
-            margin-top: 100px;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-        }
-
-        h2 {
-            color: #333;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        input[type="text"],
-        input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-            font-size: 16px;
-        }
-
-        input[type="submit"] {
-            background-color: #333;
-            color: #fff;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-
-        a {
-            text-decoration: none;
-            color: #333;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
+        <?php include "../signup/style.css"?>
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <h2>Create New Account</h2>
-        <form method="POST" action="">
-            <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="text" id="email" name="email" required>
-            </div>
+    <a href="https://front.codes/" class="logo" target="_blank">
+        <img src="https://assets.codepen.io/1462889/fcy.png" alt="">
+    </a>
 
-            <div class="form-group">
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
+    <div class="section">
+        <div class="container">
+            <div class="row full-height justify-content-center">
+                <div class="col-12 text-center align-self-center py-5">
+                    <div class="section pb-5 pt-5 pt-sm-2 text-center">
+                        <h6 class="mb-0 pb-3"><span>Log In </span><span>Sign Up</span></h6>
+                        <input class="checkbox" type="checkbox" id="reg-log" name="reg-log"/>
+                        <label for="reg-log"></label>
+                        <div class="card-3d-wrap mx-auto">
+                            <div class="card-3d-wrapper">
+                                <div class="card-back">
+                                    <div class="center-wrap">
+                                        <div class="section text-center">
+                                            <h4 class="mb-4 pb-3">Sign Up</h4>
+                                            <div class="form-group">
+                                                <input type="text" name="logname" class="form-style" placeholder="Your Full Name" id="logname" autocomplete="off">
+                                                <i class="input-icon uil uil-user"></i>
+                                            </div>    
+                                            <div class="form-group mt-2">
+                                                <input type="email" name="logemail" class="form-style" placeholder="Your Email" id="logemail" autocomplete="off">
+                                                <i class="input-icon uil uil-at"></i>
+                                            </div>    
+                                            <div class="form-group mt-2">
+                                                <input type="password" name="logpass" class="form-style" placeholder="Your Password" id="logpass" autocomplete="off">
+                                                <i class="input-icon uil uil-lock-alt"></i>
+                                            </div>
+                                            <a href="#" class="btn mt-4" id="toggle-btn">Switch to Log In</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <div class="form-group">
-                <label for="cPassword">Confirm Password:</label>
-                <input type="password" id="cPassword" name="cPassword" required>
-            </div>
-
-            <div class="form-group">
-                <label for="name">Name:</label>
-                <input type="text" id="name" name="name" required>
-            </div>
-
-            <label for="role">Account Type:</label>
-            <label>
-                <input type="radio" name="role" value="0" required> Student
-            </label>
-            <label>
-                <input type="radio" name="role" value="1" required> Teacher
-            </label>
-
-            <div class="form-group">
-                <input type="submit" value="Sign Up">
-            </div>
-        </form>
-        <p>Already have an account? <a href="/login">Log In</a></p>
+        </div>
     </div>
-</body>
 
+    <!-- Include your other scripts here -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const toggleButton = document.getElementById('toggle-btn');
+            const cardWrapper = document.querySelector('.card-3d-wrapper');
+
+            toggleButton.addEventListener('click', function () {
+                cardWrapper.classList.toggle('is-flipped');
+            });
+        });
+
+    </script>
+</body>
 </html>

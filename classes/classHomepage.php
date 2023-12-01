@@ -64,6 +64,7 @@ else if ($_SESSION["role"] == 1)
 
 <style>
     <?php include "style.css"?>
+    
 </style>
 
 <body translate="no">
@@ -80,6 +81,9 @@ else if ($_SESSION["role"] == 1)
             <li class="cards__item">
                 <div class="card__content">
                     <div class="card__title"><?=$student?></div>
+                    
+                    <!-- Add an invite button here -->
+                    <button class="invite-button" data-student="<?=$student?>">Invite</button>
                 </div>
             </li>
         <?php } ?>
@@ -89,6 +93,35 @@ else if ($_SESSION["role"] == 1)
     </ul>
 </body>
 
+<script>
+    // Function to generate a random color
+    function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+    document.addEventListener('DOMContentLoaded', function () {
+        // JavaScript to handle the invite button click
+        const inviteButtons = document.querySelectorAll('.invite-button');
+        inviteButtons.forEach(button => {
+            button.addEventListener('click', function (event) {
+                // Stop event propagation to prevent other click events
+                event.stopPropagation();
+
+                const studentName = button.getAttribute('data-student');
+
+                // You can implement the logic to send an invite here
+                // For simplicity, I'm just logging the student name to the console
+                console.log('Inviting student: ' + studentName);
+                // Change the color of the button to a random color
+                button.style.backgroundColor = getRandomColor();
+            });
+        });
+    });
+</script>
 <?php
 include_once "groups/index.php";
 include "../sidebar.html";
