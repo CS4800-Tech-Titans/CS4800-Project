@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+
+            body {
+                background-color: rgb(196, 196, 196);
+                
+                /*font-family: ;*/
+            }
+
+            .modal-container {
+                /*display: none;
+                align-items: center;*/
+                background-color: rgba(0,0,0,0.3);
+                display:flex;
+                align-items: center;
+                justify-content: center;
+                top:0;
+                left:0;
+                height: 100vh;
+                width: 100vw;
+                position: fixed;
+               
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.15s ease
+            }
+
+            .modal-container.show {
+                opacity: 1;
+                pointer-events: auto;
+            }
+            .inner-modal-container{
+                max-height: 100%;
+                overflow-y: auto;
+            }
+            .modal {
+                background-color: white;
+                border-radius:10px;
+                width: 600px;
+                padding: 30px;
+                overflow-y: auto;
+                text-align: center;
+                font-family: Arial,sans-serif;
+                font-size: 18px;
+                font-weight: bold;
+       
+            }
+
+            .form-group
+            {
+                display: flex; flex-direction: column;
+                font-size: 18px;
+                margin: 20px 0px;
+            }
+
+            .form-group input,
+            .form-group textarea
+            {
+                font-family: Arial,sans-serif;
+                font-size: 18px;
+                line-height: 1.2;
+            }
+            .form-group textarea
+            {
+                resize:none;
+                overflow-y: hidden;
+            }
+            .form-group textarea.max-size
+            {
+                overflow-y: visible;
+            }
+            #img-preview
+            {
+                max-width: 100%; 
+                margin-top: 10px; 
+                margin-bottom: 10px;
+                border: 3px solid black;
+            }
+            .buttons input,
+            .buttons button 
+            {
+                font-size: 18px;
+            }
+            /*.modal h1 {
+            }*/
+        </style>
+    </head>
+    <body>
+        <button id="createGroup">
+            Create new group
+        </button>
+
+        <div class="modal-container" id="modalContainer">
+            <div class="inner-modal-container">
+        
+                <div class="modal">
+                    <h1>Create New Group</h1>
+                    <form method="POST" action="">
+                        <div class="form-group">
+                            <label for="image">Group Logo</label>
+                            <img id="img-preview" src="defaultGroupImage.jpg" alt="Default Image"
+                                onclick="document.getElementById('image').click()">
+                            <input type="file" id="image" name="image" accept="image/*" onchange="displayImagePreview(this)">
+                        </div>
+        
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+        
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <textarea id="description" name="description" rows="4" cols="50" oninput="resizeTextArea(this)"
+                                required></textarea>
+                        </div>
+        
+                        <div class="buttons">
+                            <input type="submit" value="Create Group">
+                            <button type="button" id="closeModal">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        
+        </div>
+
+
+        <script>
+            function resizeTextArea(textarea) {
+                textarea.style.height = 'auto';
+                newHeight = textarea.scrollHeight;
+
+                const maxHeight = 35 * parseFloat(getComputedStyle(textarea).lineHeight);
+
+                if (newHeight > maxHeight)
+                {
+                    textarea.style.height = maxHeight + "px";
+                    textarea.classList.add("max-size");       
+                }
+                else
+                {
+                  textarea.style.height = newHeight + "px";
+                  textarea.classList.remove("max-size");       
+                }
+            }
+
+            function displayImagePreview(input) {
+                var preview = document.getElementById('img-preview');
+                var file = input.files[0];
+                var reader = new FileReader();
+
+                reader.onloadend = function () {
+                    preview.src = reader.result;
+                }
+            
+                if (file) {
+                    reader.readAsDataURL(file);
+                } else {
+                    preview.src = "defaultGroupImage.jpg";
+                }
+            }
+
+
+            document.getElementById("createGroup").addEventListener("click", () => {
+                document.getElementById("modalContainer").classList.add("show");
+            });
+            document.getElementById("closeModal").addEventListener("click", () => {
+                document.getElementById("modalContainer").classList.remove("show");
+            })
+        </script>
+    </body>
+</html>

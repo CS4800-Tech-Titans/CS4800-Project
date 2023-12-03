@@ -60,6 +60,34 @@ if (strpos($requestUri, $basePath) === 0) {
                             //echo $groupId;
                         //}
                         break;
+                    case 'createGroup':
+                        echo "THIS WAS A REQUEST TO MAEK A GROUP !! FOR CLASS ID ".$classId;
+                        if ($_SERVER["REQUEST_METHOD"] === "POST") {
+                            // Check if the file was uploaded without errors
+                            $imageContent = null;
+                            if (isset($_FILES["image"]) && $_FILES["image"]["error"] == UPLOAD_ERR_OK) 
+                            {
+                                #$targetDir = "uploads/"; // Specify your desired directory
+                                #$targetFile = $targetDir . basename($_FILES["file"]["name"]);
+
+                                $imagePath = $_FILES["image"]["tmp_name"];
+                                $imageContent = file_get_contents($imagePath);
+                                echo '<img src="data:image/jpg;base64, ' . base64_encode($imageContent) . '">';
+                            }
+
+                            $name = $_POST["name"];
+                            $description = $_POST["description"];
+
+                            include "../protected/connSql.php";
+                            
+                            $stmt = $conn->prepare("INSERT INTO groups (name, description, photo, classId) VALUES (?, ?, ?, ?)");
+                            $stmt->bind_param("sssi", $name, $description, $imageContent, $classId);
+                            $stmt->execute();
+
+
+                        }
+                        
+                        break;
                     default:
                         http_response_code(404); 
                         include_once("404.html");

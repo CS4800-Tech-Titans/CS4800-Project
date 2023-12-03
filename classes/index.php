@@ -55,7 +55,7 @@
             $classCount++;?>
             <li class="cards__item">
                 <a href="<?=$classId?>" class="card" outline=none>
-                    <div class="card__image card__image--fence"></div>
+                    <div class="card__image" style="background-image: url('https://www.w3schools.com/images/colorpicker2000.png');"></div>
                     <div class="card__content">
                         <div class="card__title"><?=$className?></div>
                         <p class="card__text"><?=$teacherName?></p>

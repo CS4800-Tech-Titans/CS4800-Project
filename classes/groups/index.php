@@ -28,7 +28,7 @@ $groupCount = 0;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Page Title</title>
     <style>
-        <?php include "style.css"?>
+        <?php include "style.css" ?>
         /* Add custom CSS for the plus button */
         .add-group-button {
             position: fixed;
@@ -36,7 +36,8 @@ $groupCount = 0;
             right: 20px;
             width: 50px;
             height: 50px;
-            background-color: #000; /* Black background color */
+            background-color: #000;
+            /* Black background color */
             border: none;
             border-radius: 50%;
             color: #FFF;
@@ -44,18 +45,102 @@ $groupCount = 0;
             text-align: center;
             line-height: 50px;
             cursor: pointer;
-            transition: background-color 0.3s; /* Add a smooth transition effect */
+            transition: background-color 0.3s;
+            /* Add a smooth transition effect */
         }
 
         /* Hover effect: Display "Add Group" on hover */
         .add-group-button:hover {
-            background-color: #007BFF; /* Change the background color on hover */
-            content: "Add Group"; /* Add the text on hover */
+            background-color: #007BFF;
+            /* Change the background color on hover */
+            content: "Add Group";
+            /* Add the text on hover */
         }
 
         /* Ensure card is clickable and cursor changes to pointer */
         .card {
             cursor: pointer;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        .modal-container {
+            /*display: none;
+            align-items: center;*/
+            background-color: rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 100vw;
+            position: fixed;
+
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.40s ease
+        }
+
+        .modal-container.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .inner-modal-container {
+            max-height: 100%;
+            overflow-y: auto;
+        }
+
+        .modal {
+            background-color: white;
+            border-radius: 10px;
+            width: 600px;
+            padding: 30px;
+            overflow-y: auto;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            color:black;
+            font-size: 18px;
+            font-weight: bold;
+
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            font-size: 18px;
+            margin: 20px 0px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            font-family: Arial, sans-serif;
+            font-size: 18px;
+            line-height: 1.2;
+        }
+
+        .form-group textarea {
+            resize: none;
+            overflow-y: hidden;
+        }
+
+        .form-group textarea.max-size {
+            overflow-y: visible;
+        }
+
+        #img-preview {
+            max-width: 100%;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            border: 3px solid black;
+        }
+
+        .buttons input,
+        .buttons button {
+            font-size: 18px;
         }
     </style>
 </head>
@@ -63,21 +148,31 @@ $groupCount = 0;
 <body translate="no">
     <h2 style="color:black;">Groups</h2>
     <ul class="cards">
-        <?php while ($stmt->fetch()) { 
+        <?php while ($stmt->fetch()) {
             $groupCount++;
-        ?>
+            ?>
             <li class="cards__item">
-                <a class="card" id="card<?=$groupId?>" onclick="navigateToURL(<?=$groupId?>, <?=$classId?>)">
-                    <div class="card__image card__image--fence"></div>
+                <a class="card" id="card<?= $groupId ?>" onclick="navigateToURL(<?= $groupId ?>, <?= $classId ?>)">
+                    <div class="card__image" style="<?php
+                    if ($groupPhoto === null)
+                        echo "background-image: url(https://unsplash.it/800/600?image=82);";
+                    else
+                        echo "background-image: url(data:image/jpg;base64," . base64_encode($groupPhoto);
+                    ?>)"></div>
+
                     <div class="card__content">
-                        <div class="card__title"><?=$groupName?></div>
-                        <p class="card__text"><?=$groupDescription?></p>
+                        <div class="card__title">
+                            <?= $groupName ?>
+                        </div>
+                        <p class="card__text">
+                            <?= $groupDescription ?>
+                        </p>
                         <?php
-                            if ($isUserInGroup) {
-                                echo '<button class="join-group-button" disabled>Joined</button>';
-                            } else {
-                                echo '<button class="join-group-button" data-group-id="'.$groupId.'">Join</button>';
-                            }
+                        if ($isUserInGroup) {
+                            #echo '<button class="join-group-button" disabled>Joined</button>';
+                        } else {
+                            echo '<button class="join-group-button" data-group-id="' . $groupId . '">Request to Join</button>';
+                        }
                         ?>
                     </div>
                 </a>
@@ -91,7 +186,7 @@ $groupCount = 0;
     </ul>
 
     <script>
-       // JavaScript to handle the join group button click
+        // JavaScript to handle the join group button click
         const joinButtons = document.querySelectorAll('.join-group-button');
         joinButtons.forEach(button => {
             button.addEventListener('click', function (event) {
@@ -116,10 +211,10 @@ $groupCount = 0;
                         location.reload();
                     }
                 };
-                
+
                 // Define the parameters to send to join_group.php
                 const params = `groupId=${groupId}`;
-                
+
                 xhr.open('POST', '/join_group.php', true);
                 xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
                 xhr.send(params);
@@ -131,8 +226,11 @@ $groupCount = 0;
             // Stop event propagation to prevent click on the group card
             event.stopPropagation();
 
+
+
+
             // Redirect the user to a new group creation page or display a form for creating a new group
-            window.location.href = '/create_group.php';
+            // window.location.href = '/create_group.php';
         });
 
         // Function to generate a random color
@@ -155,6 +253,84 @@ $groupCount = 0;
             // Navigate to the specified URL
             window.location.href = "/classes/" + classId + "/groups/" + groupId;
         }
+    </script>
+
+    <div class="modal-container" id="modalContainer">
+        <div class="inner-modal-container">
+
+            <div class="modal">
+                <h1>Create New Group</h1>
+                <form method="POST" action=<?= "/classes/".$classId."/createGroup"?> enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="image">Group Logo</label>
+                        <img id="img-preview" src="/images/defaultGroupImage.jpg" alt="Default Image"
+                            onclick="document.getElementById('image').click()">
+                        <input type="file" id="image" name="image" accept="image/*"
+                            onchange="displayImagePreview(this)">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea id="description" name="description" rows="4" cols="50" oninput="resizeTextArea(this)"
+                            required></textarea>
+                    </div>
+
+                    <div class="buttons">
+                        <input type="submit" value="Create Group">
+                        <button type="button" id="closeModal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+
+    <script>
+        function resizeTextArea(textarea) {
+            textarea.style.height = 'auto';
+            newHeight = textarea.scrollHeight;
+
+            const maxHeight = 35 * parseFloat(getComputedStyle(textarea).lineHeight);
+
+            if (newHeight > maxHeight) {
+                textarea.style.height = maxHeight + "px";
+                textarea.classList.add("max-size");
+            }
+            else {
+                textarea.style.height = newHeight + "px";
+                textarea.classList.remove("max-size");
+            }
+        }
+
+        function displayImagePreview(input) {
+            var preview = document.getElementById('img-preview');
+            var file = input.files[0];
+            var reader = new FileReader();
+
+            reader.onloadend = function () {
+                preview.src = reader.result;
+            }
+
+            if (file) {
+                reader.readAsDataURL(file);
+            } else {
+                preview.src = "defaultGroupImage.jpg";
+            }
+        }
+
+
+        document.getElementById("createGroupButton").addEventListener("click", () => {
+            document.getElementById("modalContainer").classList.add("show");
+        });
+        document.getElementById("closeModal").addEventListener("click", () => {
+            document.getElementById("modalContainer").classList.remove("show");
+        })
     </script>
 </body>
 
