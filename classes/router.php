@@ -61,7 +61,9 @@ if (strpos($requestUri, $basePath) === 0) {
                         //}
                         break;
                     case 'createGroup':
-                        echo "THIS WAS A REQUEST TO MAEK A GROUP !! FOR CLASS ID ".$classId;
+                        #echo "THIS WAS A REQUEST TO MAEK A GROUP !! FOR CLASS ID ".$classId;
+                        include_once "/protected/ensureLoggedIn.php";
+
                         if ($_SERVER["REQUEST_METHOD"] === "POST") {
                             // Check if the file was uploaded without errors
                             $imageContent = null;
@@ -72,7 +74,7 @@ if (strpos($requestUri, $basePath) === 0) {
 
                                 $imagePath = $_FILES["image"]["tmp_name"];
                                 $imageContent = file_get_contents($imagePath);
-                                echo '<img src="data:image/jpg;base64, ' . base64_encode($imageContent) . '">';
+                                #echo '<img src="data:image/*;base64, ' . base64_encode($imageContent) . '">';
                             }
 
                             $name = $_POST["name"];
@@ -80,11 +82,13 @@ if (strpos($requestUri, $basePath) === 0) {
 
                             include "../protected/connSql.php";
                             
-                            $stmt = $conn->prepare("INSERT INTO groups (name, description, photo, classId) VALUES (?, ?, ?, ?)");
+                            $stmt = $conn->prepare("INSERT INTO `groups` (name, description, photo, classId) VALUES (?, ?, ?, ?);");
                             $stmt->bind_param("sssi", $name, $description, $imageContent, $classId);
+
+                            # !!! THIS LINE REQUIRES "max_allowed_packet=32M" OR SOMETHING SIMILAR IN my.ini FILE FOR MYSQL CONFIG. MYSQL DEFAULTS TO ONLY 1MB MAX PACKET SIZE.
                             $stmt->execute();
 
-
+                            header("Location: /classes/".$classId."/");
                         }
                         
                         break;
