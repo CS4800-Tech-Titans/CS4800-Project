@@ -168,53 +168,66 @@ else if ($_SESSION["role"] == 1)
         </div>
 
         <!-- Add the following script tags to include the necessary libraries -->
-        <script src="https://rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
-        <script src="https://cdn.rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
+<script src="https://rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+<script src="https://cdn.rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-        <script>
-            // Log to check if Instascan is loaded
-            console.log('Instascan loaded:', Instascan);
+<script>
+    // Log to check if Instascan is loaded
+    console.log('Instascan loaded:', Instascan);
 
-            // Function to check if the URL is from the specified domain
-            function isFromDomain(url, domain) {
-                const urlObject = new URL(url);
-                return urlObject.hostname.endsWith(domain);
+    // Function to check if the URL is from the specified domain or localhost:8080
+    function isFromDomainOrLocalhost8080(url, domains) {
+        const urlObject = new URL(url);
+
+        // Check if the hostname is localhost and the port is 8080
+        if (urlObject.hostname === 'localhost' && urlObject.port === '8080') {
+            return true;
+        }
+
+        // Check if the hostname ends with one of the specified domains
+        return domains.some(domain => urlObject.hostname === domain || urlObject.hostname.endsWith('.' + domain));
+    }
+
+    document.getElementById('scanQRBtn').addEventListener('click', function () {
+        document.getElementById('addClassPopup').style.display = 'none';
+        document.getElementById('overlay').style.display = 'block';
+        document.getElementById('qrScannerPopup').style.display = 'block';
+
+        // Initialize the QR scanner
+        let scanner = new Instascan.Scanner({ video: document.getElementById('qrScannerVideo') });
+        scanner.addListener('scan', function (content) {
+            // Check if the scanned QR code is from the desired domains or localhost:8080
+            const allowedDomains = ['groupup.pro', 'localhost'];
+            if (isFromDomainOrLocalhost8080(content, allowedDomains)) {
+                window.location.href = content; // Navigate to the URL
+            } else {
+                alert('Invalid QR code. Please scan a QR code from groupup.pro or localhost:8080!');
             }
+        });
 
-            document.getElementById('scanQRBtn').addEventListener('click', function () {
-                document.getElementById('addClassPopup').style.display = 'none';
-                document.getElementById('overlay').style.display = 'block';
-                document.getElementById('qrScannerPopup').style.display = 'block';
+        // Request permission to use the camera
+        Instascan.Camera.getCameras().then(function (cameras) {
+            if (cameras.length > 0) {
+                scanner.start(cameras[0]); // Use the first available camera
+            } else {
+                alert('No cameras found.');
+            }
+        }).catch(function (e) {
+            console.error('Error accessing camera:', e);
+            alert('Error accessing camera: ' + e);
+        });
+    });
 
-                // Initialize the QR scanner
-                let scanner = new Instascan.Scanner({ video: document.getElementById('qrScannerVideo') });
-                scanner.addListener('scan', function (content) {
-                    // Check if the scanned QR code starts with the desired domain
-                    if (isFromDomain(content, 'groupup.pro')) {
-                        window.location.href = content; // Navigate to the URL
-                    } else {
-                        alert('Invalid QR code. Please scan a QR code from groupup.pro!!!');
-                    }
-                });
+    document.getElementById('closeQRScannerPopup').addEventListener('click', function () {
+        document.getElementById('qrScannerPopup').style.display = 'none';
+        document.getElementById('overlay').style.display = 'none';
+    });
 
-                // Request permission to use the camera
-                Instascan.Camera.getCameras().then(function (cameras) {
-                    if (cameras.length > 0) {
-                        scanner.start(cameras[0]); // Use the first available camera
-                    } else {
-                        alert('No cameras found.');
-                    }
-                }).catch(function (e) {
-                    console.error('Error accessing camera:', e);
-                    alert('Error accessing camera: ' + e);
-                });
-            });
+    // ... (your existing JavaScript code)
 
-            document.getElementById('closeQRScannerPopup').addEventListener('click', function () {
-                document.getElementById('qrScannerPopup').style.display = 'none';
-                document.getElementById('overlay').style.display = 'none';
-            });
-        </script>
+</script>
+
 
     </body>
 </html>
