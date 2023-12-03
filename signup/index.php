@@ -135,10 +135,32 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
             width: 90%;
         }
 
+        .account-type
+        {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .radio-buttons
+        {
+            display:flex; 
+            flex-direction: row;
+        }
+        .radio-buttons label
+        {
+            font-weight: normal;
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+
         label {
             display: block;
             font-weight: bold;
             margin-bottom: 5px;
+            text-align: left;
         }
 
         input[type="text"],
@@ -195,14 +217,16 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
             </div>
 
 
-            <div class="form-group">
+            <div class="account-type">
                 <label for="role">Account Type:</label>
-                <label>
-                    <input type="radio" name="role" value="0" required> Student
-                </label>
-                <label>
-                    <input type="radio" name="role" value="1" required> Teacher
-                </label>
+                <div class="radio-buttons">
+                    <label>
+                        <input type="radio" name="role" value="0" required> Student
+                    </label>
+                    <label>
+                        <input type="radio" name="role" value="1" required> Teacher
+                    </label>
+                </div>
             </div>
 
             <div class="form-group">
@@ -215,7 +239,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
             ?>
 
         </form>
-        <p>Already have an account? <a href="/login">Log In</a></p>
+        <p style="margin-top: 0px; margin-bottom: 20px;" >Already have an account? <a href="/login">Log In</a></p>
     </div>
 </body>
 
