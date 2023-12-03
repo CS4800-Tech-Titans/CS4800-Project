@@ -5,10 +5,10 @@ session_start();
 <html>
 <body>
 <b> You are now logged out. </b>
-<p> You will be redirected in 3 seconds. </p>
+<p> You will be redirected in 2 seconds. </p>
 
 <script>
-    setTimeout(redirect, 3000);
+    setTimeout(redirect, 2000);
       function redirect () {
         document.location.href = "/login";
          //var result = document.getElementById("result");

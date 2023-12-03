@@ -4,6 +4,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+$errorMessage = null;
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Get input data
@@ -13,8 +14,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = $_POST["name"];
     $role = $_POST["role"];
 
+
     if ($password != $cPassword) {
-        echo "Error: Passwords do not match.";
+        $errorMessage = "Error: Passwords do not match.";
     } else {
 
 
@@ -24,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $number = preg_match('@[0-9]@', $password);
 
         if (!($uppercase || $lowercase) || !$number || strlen($password) < 8) {
-            echo 'Error: Password should be at least 8 characters in length, should include at least one uppercase or lowercase letter, and at least one number.';
+            $errorMessage = 'Error: Password should be at least 8 characters in length, should include at least one uppercase or lowercase letter, and at least one number.';
         } else {
             // Strong enough password
             $hashedPass = password_hash($password, PASSWORD_DEFAULT);
@@ -46,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             // Fetch and process the results
             if ($stmt->fetch()) {
-                echo "Error: User already exists.";
+                $errorMessage = "Error: User with email ".$email." already exists.";
             } else {
                 $stmt = $conn->prepare("INSERT INTO users (email, name, password, role) VALUES (?, ?, ?, ?)");
                 $stmt->bind_param("sssi", $email, $name, $hashedPass, $role);
@@ -77,64 +79,144 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
     <title>Sign Up</title>
     <style>
         /* CSS styles for the login page */
-        <?php include "../signup/style.css"?>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .container {
+            text-align: center;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            width: 30%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .form {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+
+        .error-message
+        {
+            color: red;
+            font-weight: bold;
+            font-size: 18px;
+            margin: 15px;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 32px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            width: 90%;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            font-size: 16px;
+        }
+
+        input[type="submit"] {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            width: 24%;
+        }
+
+        a {
+            text-decoration: underline;
+            color: #333;
+        }
+
+
     </style>
 </head>
 
 <body>
-    <a href="https://front.codes/" class="logo" target="_blank">
-        <img src="https://assets.codepen.io/1462889/fcy.png" alt="">
-    </a>
-
-    <div class="section">
-        <div class="container">
-            <div class="row full-height justify-content-center">
-                <div class="col-12 text-center align-self-center py-5">
-                    <div class="section pb-5 pt-5 pt-sm-2 text-center">
-                        <h6 class="mb-0 pb-3"><span>Log In </span><span>Sign Up</span></h6>
-                        <input class="checkbox" type="checkbox" id="reg-log" name="reg-log"/>
-                        <label for="reg-log"></label>
-                        <div class="card-3d-wrap mx-auto">
-                            <div class="card-3d-wrapper">
-                                <div class="card-back">
-                                    <div class="center-wrap">
-                                        <div class="section text-center">
-                                            <h4 class="mb-4 pb-3">Sign Up</h4>
-                                            <div class="form-group">
-                                                <input type="text" name="logname" class="form-style" placeholder="Your Full Name" id="logname" autocomplete="off">
-                                                <i class="input-icon uil uil-user"></i>
-                                            </div>    
-                                            <div class="form-group mt-2">
-                                                <input type="email" name="logemail" class="form-style" placeholder="Your Email" id="logemail" autocomplete="off">
-                                                <i class="input-icon uil uil-at"></i>
-                                            </div>    
-                                            <div class="form-group mt-2">
-                                                <input type="password" name="logpass" class="form-style" placeholder="Your Password" id="logpass" autocomplete="off">
-                                                <i class="input-icon uil uil-lock-alt"></i>
-                                            </div>
-                                            <a href="#" class="btn mt-4" id="toggle-btn">Switch to Log In</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <div class="container">
+        <h1>Create New Account</h1>
+        
+        <form class = "form" method="POST" action="">
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="text" id="email" name="email" required>
             </div>
-        </div>
+
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+
+            <div class="form-group">
+                <label for="cPassword">Confirm Password:</label>
+                <input type="password" id="cPassword" name="cPassword" required>
+            </div>
+
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+
+
+            <div class="form-group">
+                <label for="role">Account Type:</label>
+                <label>
+                    <input type="radio" name="role" value="0" required> Student
+                </label>
+                <label>
+                    <input type="radio" name="role" value="1" required> Teacher
+                </label>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Sign Up">
+            </div>
+            
+            <?php 
+                if ($errorMessage)
+                    echo '<div class="error-message">'.$errorMessage.'</div>';
+            ?>
+
+        </form>
+        <p>Already have an account? <a href="/login">Log In</a></p>
     </div>
-
-    <!-- Include your other scripts here -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const toggleButton = document.getElementById('toggle-btn');
-            const cardWrapper = document.querySelector('.card-3d-wrapper');
-
-            toggleButton.addEventListener('click', function () {
-                cardWrapper.classList.toggle('is-flipped');
-            });
-        });
-
-    </script>
 </body>
+
 </html>
