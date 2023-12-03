@@ -1,5 +1,19 @@
 <?php
-include_once "../protected/ensureLoggedIn.php";
+session_start(); // Start a new or resume the existing session
+
+$roleStr = "";
+if (isset($_SESSION["role"])) {
+    if ($_SESSION["role"] == 0) {
+        $roleStr = "Student";
+    } elseif ($_SESSION["role"] == 1) {
+        $roleStr = "Teacher";
+    }
+} else {
+    // Redirect or handle the case where the role is not set in the session
+    header("Location: /login"); // Redirect to the login page if the role is not set
+    exit();
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -59,7 +73,7 @@ include_once "../protected/ensureLoggedIn.php";
     <?php include "../sidebar.html"; ?>
 
     <div class="container">
-        <h2>Welcome, <?php echo $_SESSION["name"]; ?>!</h2>
+        <h2>Welcome, <?php echo isset($_SESSION["name"]) ? $_SESSION["name"] : 'Guest'; ?>!</h2>
         <p>Would you like to join this class?</p>
 
         <div class="button-group">
@@ -71,8 +85,18 @@ include_once "../protected/ensureLoggedIn.php";
     <script>
         function joinClass(choice) {
             if (choice === 'yes') {
-                // Implement the action for joining the class (e.g., redirect to a join page)
-                alert('You clicked Yes. Implement the join class functionality here.');
+                // Extract classId from the URL
+                var currentPageUrl = window.location.href;
+                var parts = currentPageUrl.split('/');
+                var classId = parts[parts.length - 1];
+
+                // Ensure classId is a valid integer
+                if (!isNaN(classId)) {
+                    // Display the alert message with the joined classId
+                    alert('You joined class ' + classId);
+                } else {
+                    alert('Invalid classId.');
+                }
             } else {
                 // Implement the action for not joining the class
                 alert('You clicked No. Implement the action for not joining the class here.');
