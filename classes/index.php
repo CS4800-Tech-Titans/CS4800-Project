@@ -45,7 +45,9 @@
     <?php include "style.css"?>
 </style>
 
-
+<head>
+    <title>My Classes</title>
+</head>
 <body translate="no">
     <h1><br></h1>
     <h1 style="color:black;">My Classes</h1>
