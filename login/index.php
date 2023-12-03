@@ -115,7 +115,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		}
 
 		.form-group {
-			margin-bottom: 20px;
+			margin-bottom: 40px;
 			width: 90%;
 		}
 
@@ -143,7 +143,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 			border-radius: 3px;
 			cursor: pointer;
 			width: 24%;
-			margin-top: 30px;
+			margin-top: 0px;
+		}
+
+		p {
+			margin-top: 0px;	
 		}
 
 		a {
