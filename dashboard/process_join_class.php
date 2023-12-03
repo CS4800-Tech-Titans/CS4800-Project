@@ -1,12 +1,13 @@
 
 <?php
-session_start(); // Start a new or resume the existing session
 
+include_once "../protected/ensureLoggedIn.php";
 include "protected/connSql.php"; // Include the code to establish a database connection
 
 
 // Print to the console for debugging purposes
 error_log("I am in join_class");
+echo("kjl");
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {

@@ -1,6 +1,7 @@
 <?php
-session_start(); // Start a new or resume the existing session
 
+include_once "../protected/ensureLoggedIn.php";
+include "../protected/connSql.php";
 $roleStr = "";
 if (isset($_SESSION["role"])) {
     if ($_SESSION["role"] == 0) {
@@ -85,15 +86,38 @@ if (isset($_SESSION["role"])) {
     <script>
         function joinClass(choice) {
             if (choice === 'yes') {
+                <?php
+                    // Echo the userId into the JavaScript code
+                    echo "var userId = " . json_encode($_SESSION["userId"]) . ";";
+                ?>
                 // Extract classId from the URL
                 var currentPageUrl = window.location.href;
                 var parts = currentPageUrl.split('/');
                 var classId = parts[parts.length - 1];
+                
+                // Call join_group.php directly using AJAX
+                const xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        // Handle the response, if needed
+                        console.log('Join class response:', xhr.responseText);
+                        // Refresh the page after the join is successful
+                        location.reload();
+                    }
+                };
+                
+                // Define the parameters to send to join_group.php
+                const params = `classId=${classId}, userId=${userId}`;
+                
+                xhr.open('POST', '/dashboard/process_join_class.php', true);
+                xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                xhr.send(params);
+
 
                 // Ensure classId is a valid integer
                 if (!isNaN(classId)) {
                     // Display the alert message with the joined classId
-                    alert('You joined class ' + classId);
+                    alert('You joined class ' + classId + " " + userId);
                 } else {
                     alert('Invalid classId.');
                 }
