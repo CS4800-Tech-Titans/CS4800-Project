@@ -2,7 +2,7 @@
 include_once "../protected/ensureLoggedIn.php";
 include_once "../protected/connSql.php";
 
-if ($_SESSION["role"] == 0) {
+if ($_SESSION["role"] == 0) { // if user is a student
     $stmt = $conn->prepare("SELECT classes.name, classes.description, classes.teacherId, users.name AS teacherName
         FROM `classes`
         JOIN users ON classes.teacherId = users.id
@@ -28,7 +28,7 @@ if ($_SESSION["role"] == 0) {
     $students = array();
 
     // Get the names of all students in the class
-    $studentsStmt = $conn->prepare("SELECT users.name
+    $studentsStmt = $conn->prepare("SELECT users.id, users.name
         FROM `users`
         JOIN linkUserClass ON users.id = linkUserClass.userId
         WHERE linkUserClass.classId = ?");
@@ -37,15 +37,15 @@ if ($_SESSION["role"] == 0) {
 
     $studentsStmt->execute();
 
-    $studentsStmt->bind_result($studentName);
+    $studentsStmt->bind_result($studentId, $studentName);
 
     while ($studentsStmt->fetch()) {
-        $students[] = $studentName;
+        $students[] = [$studentId, $studentName];
     }
 
     // Close the students statement
     $studentsStmt->close();
-} else if ($_SESSION["role"] == 1) {
+} else if ($_SESSION["role"] == 1) {  // if user is a teacher
     $stmt = $conn->prepare("SELECT classes.name, classes.description FROM `classes` WHERE classes.id = ? AND classes.teacherId = ?;");
 
     $stmt->bind_param("ii", $classId, $_SESSION["userId"]);
@@ -89,11 +89,11 @@ if ($_SESSION["role"] == 0) {
             <li class="cards__item">
                 <div class="card__content">
                     <div class="card__title">
-                        <?= $student ?>
+                        <?= $student[1] ?>
                     </div>
 
                     <!-- Add an invite button here -->
-                    <button class="invite-button" data-student="<?= $student ?>">Invite</button>
+                    <button class="invite-button" student-id="<?= $student[0] ?>" student-name = "<?= $student[1]?>">Invite</button>
                 </div>
             </li>
         <?php } ?>
@@ -101,37 +101,14 @@ if ($_SESSION["role"] == 0) {
             <p style="color:black">There are no students in this class.</p>
         <?php } ?>
     </ul>
+
+    <h2 style="color:black;">My Invites</h2>
+
+
+
 </body>
 
-<script>
-    // Function to generate a random color
-    function getRandomColor() {
-        const letters = '0123456789ABCDEF';
-        let color = '#';
-        for (let i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
-    }
-    document.addEventListener('DOMContentLoaded', function () {
-        // JavaScript to handle the invite button click
-        const inviteButtons = document.querySelectorAll('.invite-button');
-        inviteButtons.forEach(button => {
-            button.addEventListener('click', function (event) {
-                // Stop event propagation to prevent other click events
-                event.stopPropagation();
 
-                const studentName = button.getAttribute('data-student');
-
-                // You can implement the logic to send an invite here
-                // For simplicity, I'm just logging the student name to the console
-                console.log('Inviting student: ' + studentName);
-                // Change the color of the button to a random color
-                button.style.backgroundColor = getRandomColor();
-            });
-        });
-    });
-</script>
 <?php
 include_once "groups/index.php";
 include "../sidebar.html";

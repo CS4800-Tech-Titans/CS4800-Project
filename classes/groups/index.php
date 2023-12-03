@@ -18,6 +18,7 @@ if ($_SESSION["role"] == 0) // student role
     $stmt->bind_result($groupId, $groupName, $groupDescription, $groupPhoto, $isUserInGroup);
 }
 $groupCount = 0;
+$myGroup = null;
 ?>
 
 <!DOCTYPE html>
@@ -169,6 +170,7 @@ $groupCount = 0;
                         </p>
                         <?php
                         if ($isUserInGroup) {
+                            $myGroup = $groupId;
                             #echo '<button class="join-group-button" disabled>Joined</button>';
                         } else {
                             echo '<button class="join-group-button" data-group-id="' . $groupId . '">Request to Join</button>';
@@ -333,5 +335,60 @@ $groupCount = 0;
         })
     </script>
 </body>
+
+<script>
+    myGroupId = <?=$myGroup?>;
+    // Function to generate a random color
+    function getRandomColor() {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+    document.addEventListener('DOMContentLoaded', function () {
+        // JavaScript to handle the invite button click
+        const inviteButtons = document.querySelectorAll('.invite-button');
+        inviteButtons.forEach(button => {
+            button.addEventListener('click', function (event) {
+                // Stop event propagation to prevent other click events
+                event.stopPropagation();
+
+                const studentName = button.getAttribute('student-name');
+                const studentId = button.getAttribute('student-id');
+
+                // You can implement the logic to send an invite here
+                // For simplicity, I'm just logging the student name to the console
+                console.log('Inviting student: ' + studentName);
+
+
+                // Call invite_user_to_group.php directly using AJAX
+                const xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        // Handle the response, if needed
+                        //console.log('Join group response:', xhr.responseText);
+                        // Refresh the page after the join is successful
+                        //location.reload();
+                        button.innerHTML = "Invited";
+                        button.disabled = true;
+                    }
+                };
+
+                // Define the parameters to send to join_group.php
+                const params = `groupId=${myGroupId}&receiverUserId=${studentId}&message=none`;
+
+                xhr.open('POST', '/invite_user_to_group.php', true);
+                xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                xhr.send(params);
+
+                //console.log(params);
+                // Change the color of the button to a random color
+                button.style.backgroundColor = getRandomColor();
+            });
+        });
+    });
+</script>
 
 </html>
