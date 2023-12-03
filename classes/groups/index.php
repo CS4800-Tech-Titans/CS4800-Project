@@ -157,7 +157,7 @@ $groupCount = 0;
                     if ($groupPhoto === null)
                         echo "background-image: url(https://unsplash.it/800/600?image=82);";
                     else
-                        echo "background-image: url(data:image/jpg;base64," . base64_encode($groupPhoto);
+                        echo "background-image: url(data:image/*;base64," . base64_encode($groupPhoto);
                     ?>)"></div>
 
                     <div class="card__content">
