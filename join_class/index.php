@@ -1,7 +1,7 @@
 <?php
 
-include_once "protected/ensureLoggedIn.php";
-include_once "protected/connSql.php";
+include_once "../protected/ensureLoggedIn.php";
+include_once "../protected/connSql.php";
 
 $roleStr = "";
 if (isset($_SESSION["role"])) {
@@ -30,7 +30,7 @@ if (isset($_SESSION["role"])) {
     if (!$classQuery->fetch())
     {
         http_response_code(404); 
-        include_once("404.html");
+        include_once("../404.html");
         die();
     }
 
@@ -96,7 +96,7 @@ if (isset($_SESSION["role"])) {
     </style>
 </head>
 <body>
-    <?php include "sidebar.html"; ?>
+    <?php include "../sidebar.html"; ?>
 
     <div class="container">
         <h2>Welcome, <?php echo isset($_SESSION["name"]) ? $_SESSION["name"] : 'Guest'; ?>!</h2>
