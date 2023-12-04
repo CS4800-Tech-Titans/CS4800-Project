@@ -2,6 +2,7 @@
 include_once "../protected/ensureLoggedIn.php";
 include "../protected/connSql.php";
 
+$myGroup = -1;
 if ($_SESSION["role"] == 0) // student role
 {
     $stmt = $conn->prepare("SELECT groups.id, groups.name, groups.description, groups.photo, 
@@ -16,9 +17,11 @@ if ($_SESSION["role"] == 0) // student role
     $stmt->execute();
 
     $stmt->bind_result($groupId, $groupName, $groupDescription, $groupPhoto, $isUserInGroup);
+
+    $myGroup = null;
 }
 $groupCount = 0;
-$myGroup = null;
+
 ?>
 
 <!DOCTYPE html>

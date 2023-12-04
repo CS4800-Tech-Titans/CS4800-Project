@@ -110,18 +110,26 @@ if ($isStudent) { // if user is a student
 
 
 } else if ($_SESSION["role"] == 1) {  // if user is a teacher
-    $stmt = $conn->prepare("SELECT classes.name, classes.description FROM `classes` WHERE classes.id = ? AND classes.teacherId = ?;");
+    $stmt = $conn->prepare("SELECT classes.name, classes.description, classes.joinCode FROM `classes` WHERE classes.id = ? AND classes.teacherId = ?;");
+
 
     $stmt->bind_param("ii", $classId, $_SESSION["userId"]);
 
     $stmt->execute();
 
-    $stmt->bind_result($className, $classDescription);
+    $stmt->bind_result($className, $classDescription, $classJoinCode);
+
+    if (!$stmt->fetch()) {
+        http_response_code(404);
+        include_once("404.html");
+        die();
+    }
+    $stmt->close();
+
     $teacherId = $_SESSION["userId"];
     $teacherName = $_SESSION["name"];
 
     // Close the main statement
-    $stmt->close();
     
     // Initialize an empty array for students
     $students = array();
@@ -229,6 +237,8 @@ if ($isStudent) { // if user is a student
     </p>
 
     <?php if ($_SESSION["role"] == 1): // Check if the user is a teacher ?>
+        <p style="color:black;">Join Code: <?=$classJoinCode?><p>
+        <button id="copyInviteLink" onclick="copyInviteLink()">Copy Invite Link</button>
         <button id="showQRCodeBtn">Show QR Code</button>
         <div id="qrCodePopup" class="qr-code-popup">
             <span class="close-btn" id="closeQRCodePopup" font-size="20px">&times;</span>
@@ -281,6 +291,16 @@ if ($isStudent) { // if user is a student
 <script src="https://rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
 
 <script>
+
+    const joinCode = '<?=$classJoinCode?>';
+    const joinUrl = window.location.host + "/join_class/" + joinCode;
+
+    function copyInviteLink()
+    {
+        navigator.clipboard.writeText(joinUrl);
+        alert("The invite link has been copied to your clipboard. ")
+    }
+
     function acceptInvitation(inviteId, groupId)
     {
         console.log('Accepting invite: ' + inviteId + " For group id: " + groupId);
@@ -307,10 +327,11 @@ if ($isStudent) { // if user is a student
     // Additional JavaScript for QR Code generation and popup handling
     function createQRCode(classId) {
         //const url = `http://localhost:8080/dashboard/join_class_page.php/${classId}`;
-        const url = `http://localhost/dashboard/join_class_page.php/${classId}`;
+        //const url = `http://localhost/dashboard/join_class_page.php/${classId}`;
         
+        document.getElementById("qrCode").innerHTML = "";
         new QRCode(document.getElementById("qrCode"), {
-            text: url,
+            text: joinUrl,
             width: 512,
             height: 512,
             colorDark: "#000000",
