@@ -165,7 +165,25 @@ if ($_SESSION["role"] == 0) { // if user is a student
     </title>
     <style>
         <?php include "style.css" ?>
-
+        /* Additional styles for the QR Code Popup */
+        .qr-code-popup {
+            display: none; /* Initially hidden */
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        .qr-code-popup span {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+        }
         .invite-card {
             background-color: #fff;
             border-radius: 8px;
@@ -208,6 +226,15 @@ if ($_SESSION["role"] == 0) { // if user is a student
     <p style="color:black;">
         <?= $classDescription ?>
     </p>
+
+    <?php if ($_SESSION["role"] == 1): // Check if the user is a teacher ?>
+        <button id="showQRCodeBtn">Show QR Code</button>
+        <div id="qrCodePopup" class="qr-code-popup">
+            <span class="close-btn" id="closeQRCodePopup">&times;</span>
+            <h3>Your QR Code</h3>
+            <div id="qrCode"></div> <!-- Container for the QR code -->
+        </div>
+    <?php endif; ?>
 </body>
 
 <body translate="no">
@@ -245,6 +272,9 @@ if ($_SESSION["role"] == 0) { // if user is a student
         
 </body>
 
+
+<script src="https://rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+
 <script>
     function acceptInvitation(inviteId, groupId)
     {
@@ -268,6 +298,31 @@ if ($_SESSION["role"] == 0) { // if user is a student
         xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
         xhr.send(params);
     }
+    <?php if ($_SESSION["role"] == 1): // Teacher ?>
+    // Additional JavaScript for QR Code generation and popup handling
+    function createQRCode(classId) {
+        //const url = `http://localhost:8080/dashboard/join_class_page.php/${classId}`;
+        const url = `http://localhost:8080/dashboard/join_class_page.php/${classId}`;
+        
+        new QRCode(document.getElementById("qrCode"), {
+            text: url,
+            width: 128,
+            height: 128,
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H
+        });
+    }
+
+    document.getElementById('showQRCodeBtn').addEventListener('click', function () {
+        document.getElementById('qrCodePopup').style.display = 'block';
+        createQRCode(<?= json_encode($classId) ?>); // Generate QR code with the class-specific URL
+    });
+
+    document.getElementById('closeQRCodePopup').addEventListener('click', function () {
+        document.getElementById('qrCodePopup').style.display = 'none';
+    });
+    <?php endif; ?>
 </script>
 
 
