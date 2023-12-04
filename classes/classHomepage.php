@@ -45,6 +45,44 @@ if ($_SESSION["role"] == 0) { // if user is a student
 
     // Close the students statement
     $studentsStmt->close();
+
+
+    $myInvites = array();
+
+    // Get the group invites for this user
+    /*$invitesStmt = $conn->prepare("SELECT groupInvite.senderUserId, groupInvite.groupId
+    FROM groupInvite
+    JOIN groups ON groupInvite.groupId = groups.id
+    WHERE groups.classId = ? 
+    AND groupInvite.receiverUserId = ?;");*/
+    $invitesStmt = $conn->prepare("
+        SELECT 
+            groupInvite.id,
+            groupInvite.senderUserId, 
+            users.name, 
+            groupInvite.groupId, 
+            groups.name
+        FROM groupInvite
+        JOIN groups ON groupInvite.groupId = groups.id
+        JOIN users ON groupInvite.senderUserId = users.id
+        WHERE groups.classId = ? 
+        AND groupInvite.receiverUserId = ?;
+    ");
+
+    $invitesStmt->bind_param("ii", $classId, $_SESSION["userId"]);
+
+    $invitesStmt->execute();
+
+    $invitesStmt->bind_result($inviteId, $senderUserId, $senderName, $groupId, $groupName);
+
+    while ($invitesStmt->fetch()) {
+        $myInvites[] = [$inviteId, $senderUserId, $senderName, $groupId, $groupName];
+    }
+
+    // Close the students statement
+    $invitesStmt->close();
+
+
 } else if ($_SESSION["role"] == 1) {  // if user is a teacher
     $stmt = $conn->prepare("SELECT classes.name, classes.description FROM `classes` WHERE classes.id = ? AND classes.teacherId = ?;");
 
@@ -65,6 +103,34 @@ if ($_SESSION["role"] == 0) { // if user is a student
     </title>
     <style>
         <?php include "style.css" ?>
+
+        .invite-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            padding: 15px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            width: 30%;
+        }
+
+        .invite-text {
+            margin-right: 20px;
+            color: black;
+        }
+
+        .button {
+            background-color: #d1d1d1;
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
     </style>
 
 </head>
@@ -100,13 +166,47 @@ if ($_SESSION["role"] == 0) { // if user is a student
         <?php if (empty($students)) { ?>
             <p style="color:black">There are no students in this class.</p>
         <?php } ?>
-    </ul>
-
-    <h2 style="color:black;">My Invites</h2>
-
-
-
+        </ul>
+        
+        <h2 style="color:black;">My Invites</h2>
+        <?php foreach ($myInvites as $invite) { ?>
+            <div class="invite-card">
+                <div class="invite-text">
+                    <?=$invite[2]?> has invited you to join '<?=$invite[4]?>'
+                </div>
+                <button class="button" onclick="acceptInvitation(<?=$invite[0]?>, <?=$invite[3]?>)">Accept Invitation</button>
+            </div>
+        <?php } ?>
+        <?php if (empty($myInvites)) { ?>
+            <p style="color:black">You have no invites.</p>
+        <?php } ?>
+        
 </body>
+
+<script>
+    function acceptInvitation(inviteId, groupId)
+    {
+        console.log('Accepting invite: ' + inviteId + " For group id: " + groupId);
+
+        // Call join_group.php directly using AJAX
+        const xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                // Handle the response, if needed
+                console.log('Accept Invite Response:', xhr.responseText);
+                // Refresh the page after the join is successful
+                location.reload();
+            }
+        };
+
+        // Define the parameters to send to join_group.php
+        const params = `inviteId=${inviteId}&groupId=${groupId}`;
+
+        xhr.open('POST', '/accept_group_invite.php', true);
+        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xhr.send(params);
+    }
+</script>
 
 
 <?php
