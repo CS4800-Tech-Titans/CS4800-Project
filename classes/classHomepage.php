@@ -2,7 +2,8 @@
 include_once "../protected/ensureLoggedIn.php";
 include_once "../protected/connSql.php";
 
-if ($_SESSION["role"] == 0) { // if user is a student
+$isStudent = $_SESSION["role"] == 0;
+if ($isStudent) { // if user is a student
     $stmt = $conn->prepare("SELECT classes.name, classes.description, classes.teacherId, users.name AS teacherName
         FROM `classes`
         JOIN users ON classes.teacherId = users.id
@@ -247,8 +248,11 @@ if ($_SESSION["role"] == 0) { // if user is a student
                         <?= $student[1] ?>
                     </div>
 
+                    <?php if ($isStudent){ ?>
+                        <button class="invite-button" student-id="<?= $student[0] ?>" student-name = "<?= $student[1]?>">Invite</button>
+                    <?php}?>
                     <!-- Add an invite button here -->
-                    <button class="invite-button" student-id="<?= $student[0] ?>" student-name = "<?= $student[1]?>">Invite</button>
+                    
                 </div>
             </li>
         <?php } ?>
@@ -256,6 +260,8 @@ if ($_SESSION["role"] == 0) { // if user is a student
             <p style="color:black">There are no students in this class.</p>
         <?php } ?>
         </ul>
+        
+        <?php if ($isStudent){ ?>
         
         <h2 style="color:black;">My Invites</h2>
         <?php foreach ($myInvites as $invite) { ?>
@@ -269,6 +275,7 @@ if ($_SESSION["role"] == 0) { // if user is a student
         <?php if (empty($myInvites)) { ?>
             <p style="color:black">You have no invites.</p>
         <?php } ?>
+        <?php}?>
         
 </body>
 
