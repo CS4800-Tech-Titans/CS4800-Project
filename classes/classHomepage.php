@@ -261,21 +261,21 @@ if ($isStudent) { // if user is a student
         <?php } ?>
         </ul>
         
-        <?php if ($isStudent){ ?>
-        
-        <h2 style="color:black;">My Invites</h2>
-        <?php foreach ($myInvites as $invite) { ?>
-            <div class="invite-card">
-                <div class="invite-text">
-                    <?=$invite[2]?> has invited you to join '<?=$invite[4]?>'
+        <?php if ($isStudent) { ?>
+            
+            <h2 style="color:black;">My Invites</h2>
+            <?php foreach ($myInvites as $invite) { ?>
+                <div class="invite-card">
+                    <div class="invite-text">
+                        <?=$invite[2]?> has invited you to join '<?=$invite[4]?>'
+                    </div>
+                    <button class="button" onclick="acceptInvitation(<?=$invite[0]?>, <?=$invite[3]?>)">Accept Invitation</button>
                 </div>
-                <button class="button" onclick="acceptInvitation(<?=$invite[0]?>, <?=$invite[3]?>)">Accept Invitation</button>
-            </div>
+            <?php } ?>
+            <?php if (empty($myInvites)) { ?>
+                <p style="color:black">You have no invites.</p>
+            <?php } ?>
         <?php } ?>
-        <?php if (empty($myInvites)) { ?>
-            <p style="color:black">You have no invites.</p>
-        <?php } ?>
-        <?php}?>
         
 </body>
 

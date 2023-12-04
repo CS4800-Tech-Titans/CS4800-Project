@@ -92,7 +92,7 @@ if (strpos($requestUri, $basePath) === 0) {
 
                             $stmt->close();
 
-                            $linkInsertQuery = $conn->prepare("INSERT INTO linkusergroup (userId, groupId, role) VALUES (?, ?, ?)");
+                            $linkInsertQuery = $conn->prepare("INSERT INTO linkUserGroup (userId, groupId, role) VALUES (?, ?, ?)");
         
                             // Define the user ID (fetched from the session)
                             $userId = $_SESSION["userId"];
@@ -104,11 +104,11 @@ if (strpos($requestUri, $basePath) === 0) {
 
                             // Check if the entry creation is successful
                             if ($linkInsertQuery->execute()) {
-                                // Group and linkusergroup entry creation successful, redirect to a success page or back to the group listing
+                                // Group and linkUserGroup entry creation successful, redirect to a success page or back to the group listing
                                 //header("Location: /classes/{$classId}");
                             } else {
                                 // Error handling: Display an error message or redirect to an error page
-                                echo "Failed to create a linkusergroup entry. Please try again.";
+                                echo "Failed to create a linkUserGroup entry. Please try again.";
                             }
                             $linkInsertQuery->close();
                             header("Location: /classes/".$classId."/");
