@@ -293,7 +293,7 @@ if ($isStudent) { // if user is a student
 <script>
 
     const joinCode = '<?=$classJoinCode?>';
-    const joinUrl = window.location.host + "/join_class/" + joinCode;
+    const joinUrl = "http://" + window.location.host + "/join_class/" + joinCode;
 
     function copyInviteLink()
     {
