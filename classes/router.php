@@ -62,7 +62,7 @@ if (strpos($requestUri, $basePath) === 0) {
                         break;
                     case 'createGroup':
                         #echo "THIS WAS A REQUEST TO MAEK A GROUP !! FOR CLASS ID ".$classId;
-                        include_once "/protected/ensureLoggedIn.php";
+                        include_once "../protected/ensureLoggedIn.php";
 
                         if ($_SERVER["REQUEST_METHOD"] === "POST") {
                             // Check if the file was uploaded without errors
@@ -88,6 +88,29 @@ if (strpos($requestUri, $basePath) === 0) {
                             # !!! THIS LINE REQUIRES "max_allowed_packet=32M" OR SOMETHING SIMILAR IN my.ini FILE FOR MYSQL CONFIG. MYSQL DEFAULTS TO ONLY 1MB MAX PACKET SIZE.
                             $stmt->execute();
 
+                            $newGroupId = $stmt->insert_id;
+
+                            $stmt->close();
+
+                            $linkInsertQuery = $conn->prepare("INSERT INTO linkusergroup (userId, groupId, role) VALUES (?, ?, ?)");
+        
+                            // Define the user ID (fetched from the session)
+                            $userId = $_SESSION["userId"];
+
+                             // TODO: Replace this with the actual user role
+                            $role = 1;
+
+                            $linkInsertQuery->bind_param("iii", $userId, $newGroupId, $role);
+
+                            // Check if the entry creation is successful
+                            if ($linkInsertQuery->execute()) {
+                                // Group and linkusergroup entry creation successful, redirect to a success page or back to the group listing
+                                //header("Location: /classes/{$classId}");
+                            } else {
+                                // Error handling: Display an error message or redirect to an error page
+                                echo "Failed to create a linkusergroup entry. Please try again.";
+                            }
+                            $linkInsertQuery->close();
                             header("Location: /classes/".$classId."/");
                         }
                         
