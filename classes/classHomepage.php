@@ -57,6 +57,43 @@ else if ($_SESSION["role"] == 1)
     $stmt->bind_result($className, $classDescription);
     $teacherId = $_SESSION["userId"];
     $teacherName = $_SESSION["name"];
+
+    // Close the main statement
+    $stmt->close();
+    
+    // Initialize an empty array for students
+    $students = array();
+
+    // Get the names of all students in the class, excluding the current user
+    $studentsStmt = $conn->prepare("SELECT users.name
+    FROM `users`
+    JOIN linkUserClass ON users.id = linkUserClass.userId
+    WHERE linkUserClass.classId = ? AND users.id != ?");
+
+    $studentsStmt->bind_param("ii", $classId, $_SESSION["userId"]);
+
+    $studentsStmt->execute();
+
+    $studentsStmt->bind_result($studentName);
+
+    while ($studentsStmt->fetch()) {
+    $students[] = $studentName;
+    }
+    
+    // Close the students statement
+    $studentsStmt->close();
+
+     $stmt = $conn->prepare("SELECT classes.name, classes.description, classes.teacherId, users.name AS teacherName
+        FROM `classes`
+        JOIN users ON classes.teacherId = users.id
+        JOIN linkUserClass ON linkUserClass.userId = ? AND linkUserClass.classId = ?
+        WHERE classes.id = ?;");
+
+    $stmt->bind_param("iii", $_SESSION["userId"], $classId, $classId);
+
+    $stmt->execute();
+
+    $stmt->bind_result($className, $classDescription, $teacherId, $teacherName);
 }
 
 ?>
