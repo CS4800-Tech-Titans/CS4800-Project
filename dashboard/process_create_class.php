@@ -3,6 +3,31 @@ session_start(); // Start a new or resume the existing session
 
 include "../protected/connSql.php"; // Include the code to establish a database connection
 
+
+function generateRandomString($length = 8) {
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $randomString = '';
+    for ($i = 0; $i < $length; $i++) {
+        $randomString .= $characters[rand(0, strlen($characters) - 1)];
+    }
+    return $randomString;
+}
+
+function isStringUnique($randomString, $conn) {
+    $count = 1;
+    $query = "SELECT COUNT(*) FROM `classes` WHERE joinCode = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param('s', $randomString);
+    $stmt->execute();
+    $stmt->bind_result($count);
+    $stmt->fetch();
+    $stmt->close();
+    return $count == 0;
+}
+
+
+
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Check if the user is logged in and has a valid session
     if (isset($_SESSION["userId"])) {
@@ -14,10 +39,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $userId = $_SESSION["userId"];
         
    
-        // Create an entry in the classs table
-        $insertQuery = $conn->prepare("INSERT INTO classes (name, teacherId, description) VALUES (?, ?, ?)");
+        do {
+            $joinCode = generateRandomString(8);
+        } 
+        while (!isStringUnique($joinCode, $conn));
         
-        $insertQuery->bind_param("sis", $className, $userId, $classDescription);
+
+        // Create an entry in the classs table
+        $insertQuery = $conn->prepare("INSERT INTO classes (name, teacherId, description, photo, joinCode) VALUES (?, ?, ?, ?, ?)");
+        
+        $imageContent = null;
+
+        $insertQuery->bind_param("sisss", $className, $userId, $classDescription, $imageContent, $joinCode);
         
         // Check if class creation is successful
         if ($insertQuery->execute()) {
@@ -27,7 +60,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Create an entry in the linkUserClass table
             $linkInsertQuery = $conn->prepare("INSERT INTO linkUserClass (userId, classId) VALUES (?, ?)");
         
-       
+           
         
             $linkInsertQuery->bind_param("ii", $userId, $newClassId);
         

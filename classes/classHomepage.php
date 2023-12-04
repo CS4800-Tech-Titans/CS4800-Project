@@ -231,7 +231,7 @@ if ($isStudent) { // if user is a student
     <?php if ($_SESSION["role"] == 1): // Check if the user is a teacher ?>
         <button id="showQRCodeBtn">Show QR Code</button>
         <div id="qrCodePopup" class="qr-code-popup">
-            <span class="close-btn" id="closeQRCodePopup">&times;</span>
+            <span class="close-btn" id="closeQRCodePopup" font-size="20px">&times;</span>
             <h3>Your QR Code</h3>
             <div id="qrCode"></div> <!-- Container for the QR code -->
         </div>
@@ -260,17 +260,19 @@ if ($isStudent) { // if user is a student
         <?php } ?>
         </ul>
         
-        <h2 style="color:black;">My Invites</h2>
-        <?php foreach ($myInvites as $invite) { ?>
-            <div class="invite-card">
-                <div class="invite-text">
-                    <?=$invite[2]?> has invited you to join '<?=$invite[4]?>'
+        <?php if ($isStudent) { ?>
+            <h2 style="color:black;">My Invites</h2>
+            <?php foreach ($myInvites as $invite) { ?>
+                <div class="invite-card">
+                    <div class="invite-text">
+                        <?=$invite[2]?> has invited you to join '<?=$invite[4]?>'
+                    </div>
+                    <button class="button" onclick="acceptInvitation(<?=$invite[0]?>, <?=$invite[3]?>)">Accept Invitation</button>
                 </div>
-                <button class="button" onclick="acceptInvitation(<?=$invite[0]?>, <?=$invite[3]?>)">Accept Invitation</button>
-            </div>
-        <?php } ?>
-        <?php if (empty($myInvites)) { ?>
-            <p style="color:black">You have no invites.</p>
+            <?php } ?>
+            <?php if (empty($myInvites)) { ?>
+                <p style="color:black">You have no invites.</p>
+            <?php } ?>
         <?php } ?>
         
 </body>
@@ -304,13 +306,13 @@ if ($isStudent) { // if user is a student
     <?php if ($_SESSION["role"] == 1): // Teacher ?>
     // Additional JavaScript for QR Code generation and popup handling
     function createQRCode(classId) {
-        //const url = `http://groupup.pro/dashboard/join_class_page.php/${classId}`;
-        const url = `http://localhost:8080/dashboard/join_class_page.php/${classId}`;
+        //const url = `http://localhost:8080/dashboard/join_class_page.php/${classId}`;
+        const url = `http://localhost/dashboard/join_class_page.php/${classId}`;
         
         new QRCode(document.getElementById("qrCode"), {
             text: url,
-            width: 128,
-            height: 128,
+            width: 512,
+            height: 512,
             colorDark: "#000000",
             colorLight: "#ffffff",
             correctLevel: QRCode.CorrectLevel.H
