@@ -2,7 +2,8 @@
 include_once "../protected/ensureLoggedIn.php";
 include_once "../protected/connSql.php";
 
-if ($_SESSION["role"] == 0) { // if user is a student
+$isStudent = $_SESSION["role"] == 0;
+if ($isStudent) { // if user is a student
     $stmt = $conn->prepare("SELECT classes.name, classes.description, classes.teacherId, users.name AS teacherName
         FROM `classes`
         JOIN users ON classes.teacherId = users.id
@@ -247,7 +248,7 @@ if ($_SESSION["role"] == 0) { // if user is a student
                         <?= $student[1] ?>
                     </div>
 
-<?php if ($isStudent) { ?>
+                    <?php if ($isStudent) { ?>
                         <button class="invite-button" student-id="<?= $student[0] ?>" student-name = "<?= $student[1]?>">Invite</button>
                     <?php } ?>
                     <!-- Add an invite button here -->
