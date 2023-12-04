@@ -7,7 +7,7 @@ html {
   background-color: #f0f0f0;
 }
 body {
-  color: #999999;
+  color: #3b3b3b;
   font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-style: normal;
   font-weight: 400;
@@ -98,24 +98,11 @@ img {
     padding-top: 66.6%;
   }
 }
-.card__image--flowers {
-  background-image: url(https://unsplash.it/800/600?image=82);
-}
-.card__image--river {
-  background-image: url(https://unsplash.it/800/600?image=11);
-}
-.card__image--record {
-  background-image: url(https://unsplash.it/800/600?image=39);
-}
-.card__image--fence {
-  background-image: url(https://unsplash.it/800/600?image=59);
-}
 .card__title {
   color: #696969;
   font-size: 1.25rem;
-  font-weight: 300;
+  font-weight: bold;
   letter-spacing: 2px;
-  text-transform: uppercase;
 }
 .card__text {
   flex: 1 1 auto;

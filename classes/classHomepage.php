@@ -24,6 +24,31 @@ if ($_SESSION["role"] == 0) { // if user is a student
     // Close the main statement
     $stmt->close();
 
+    $studentGroupMemberships = $conn->prepare("SELECT
+        groups.id, groups.name, users.id, users.name
+        FROM groups
+        JOIN linkUserGroup ON groups.id = linkUserGroup.groupId
+        JOIN users ON linkUserGroup.userId = users.id
+        WHERE groups.classId = ?;
+    ");
+    $studentGroupMemberships->bind_param("i", $classId);
+
+    $studentGroupMemberships->execute();
+
+    $studentGroupMemberships->bind_result($groupId, $groupName, $userId, $userName);
+
+    // PHP uses hashmap implementation of array apparently.
+    $groupMembers = array();
+
+    while ($studentGroupMemberships->fetch())
+    {
+        if (!isset($groupMembers[$groupId]))
+            $groupMembers[$groupId] = array();
+
+        // APPEND TO LIST. BASICALLY $groupMembers[$groupId].append(val)
+        $groupMembers[$groupId][] = $userName;
+    }
+
     // Initialize an empty array for students
     $students = array();
 

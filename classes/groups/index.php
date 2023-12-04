@@ -153,7 +153,8 @@ $myGroup = null;
             $groupCount++;
             ?>
             <li class="cards__item">
-                <a class="card" id="card<?= $groupId ?>" onclick="navigateToURL(<?= $groupId ?>, <?= $classId ?>)">
+            <?php /*<a class="card" id="card<?= $groupId ?>" onclick="navigateToURL(<?= $groupId ?>, <?= $classId ?>)"> */ ?>
+            <a class="card" id="card<?= $groupId ?>">
                     <div class="card__image" style="<?php
                     if ($groupPhoto === null)
                         echo "background-image: url(https://unsplash.it/800/600?image=82);";
@@ -165,13 +166,25 @@ $myGroup = null;
                         <div class="card__title">
                             <?= $groupName ?>
                         </div>
-                        <p class="card__text">
+                        <p class="card__text" style="margin-bottom: 0px">
                             <?= $groupDescription ?>
+                        </p>
+                        <p><b> Members: </b>
+
+                        
+                        <?php 
+                        if (isset($groupMembers[$groupId])) 
+                        {
+                            ?>
+                                <?= implode(', ', $groupMembers[$groupId]); ?>
+                            <?php 
+                        }
+                        ?>
                         </p>
                         <?php
                         if ($isUserInGroup) {
                             $myGroup = $groupId;
-                            #echo '<button class="join-group-button" disabled>Joined</button>';
+                            echo '<button class="leave-group-button" data-group-id="' . $groupId . '">Leave Group</button>';
                         } else {
                             echo '<button class="join-group-button" data-group-id="' . $groupId . '">Request to Join</button>';
                         }
@@ -223,17 +236,41 @@ $myGroup = null;
             });
         });
 
-        // JavaScript to handle the create group button click
-        document.getElementById('createGroupButton').addEventListener('click', function (event) {
-            // Stop event propagation to prevent click on the group card
-            event.stopPropagation();
+        const leaveButtons = document.querySelectorAll('.leave-group-button');
+        leaveButtons.forEach(button => {
+            button.addEventListener('click', function (event) {
+                // Stop event propagation to prevent click on the group card
+                event.stopPropagation();
 
+                const groupId = button.getAttribute('data-group-id');
 
+                // Change the color of the button to a random color
+                button.style.backgroundColor = getRandomColor();
 
+                // Display the groupId
+                console.log('Leaving group: ' + groupId);
 
-            // Redirect the user to a new group creation page or display a form for creating a new group
-            // window.location.href = '/create_group.php';
+                // Call join_group.php directly using AJAX
+                const xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        // Handle the response, if needed
+                        console.log('Leave group response:', xhr.responseText);
+                        // Refresh the page after the join is successful
+                        location.reload();
+                    }
+                };
+
+                // Define the parameters to send to join_group.php
+                const params = `groupId=${groupId}`;
+
+                xhr.open('POST', '/leave_group.php', true);
+                xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                xhr.send(params);
+            });
         });
+
+        
 
         // Function to generate a random color
         function getRandomColor() {
