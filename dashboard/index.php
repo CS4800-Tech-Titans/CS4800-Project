@@ -27,6 +27,14 @@ else if ($_SESSION["role"] == 1)
             text-align: center;
             margin-top: 100px;
             position: relative;
+            display: flex;
+            flex-direction: column;
+            align-content: center;
+        }
+
+        .centered-link {
+            display: inline-block; /* Make the container a block element and center its child */
+            margin: 5px;
         }
 
         h2 {
@@ -34,8 +42,9 @@ else if ($_SESSION["role"] == 1)
         }
 
         a {
-            text-decoration: none;
-            color: #333;
+            text-decoration: underline;
+            color: #333;   
+            width: fit-content;
         }
 
         a:hover {
@@ -95,17 +104,22 @@ else if ($_SESSION["role"] == 1)
 </head>
     <body>
         <div class="container">
-        <h2>Welcome, <?php echo $_SESSION["name"]; ?>!</h2>
-        <p>This is the dashboard. You are now authenticated. You are a <?=$roleStr?>.</p>
-        <a href="/classes">Go to my classes</a><br>
+        <h2 style="margin-bottom: 0px">Welcome, <?php echo $_SESSION["name"]; ?>!</h2>
+        <p>Account type: <b><?=$roleStr?></b></p>
+
+        <div class="centered-link">
+            <a href="/classes">Go to my classes</a>
+        </div>
         
+        <div class="centered-link">
         <?php if ($_SESSION["role"] == 0): ?>
             <!-- Show 'Add a class' for students -->
-            <a href="#" id="addClassLink">Add a class</a><br>
+            <a href="#" id="addClassLink">Add a class</a>
         <?php elseif ($_SESSION["role"] == 1): ?>
             <!-- Show 'Create a Class' for teachers -->
-            <a href="#" id="createClassLink">Create a class</a><br>
+            <a href="#" id="createClassLink">Create a class</a>
         <?php endif; ?>
+        </div>
 
             <!-- Overlay to darken the background -->
             <div class="overlay" id="overlay"></div>
@@ -130,8 +144,9 @@ else if ($_SESSION["role"] == 1)
                     <button id="cancelBtn">Cancel</button>
                 </div>
             </div>
-
-            <p><a href="/logout">Logout</a></p>
+            <div class="centered-link">
+            <a href="/logout">Logout</a>
+            </div>
         </div>
 
         <script>
