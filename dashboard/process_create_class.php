@@ -24,8 +24,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Get the ID of the newly created class
             $newClassId = $insertQuery->insert_id;
         
-            // Create an entry in the linkuserclass table
-            $linkInsertQuery = $conn->prepare("INSERT INTO linkuserclass (userId, classId) VALUES (?, ?)");
+            // Create an entry in the linkUserClass table
+            $linkInsertQuery = $conn->prepare("INSERT INTO linkUserClass (userId, classId) VALUES (?, ?)");
         
        
         
@@ -37,7 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 header("Location: /classes/{$classId}");
             } else {
                 // Error handling: Display an error message or redirect to an error page
-                echo "Failed to create a linkuserclass entry. Please try again.";
+                echo "Failed to create a linkUserClass entry. Please try again.";
             }
         
             $linkInsertQuery->close(); // Close the prepared statement
