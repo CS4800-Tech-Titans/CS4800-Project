@@ -136,22 +136,23 @@ else if ($_SESSION["role"] == 1)
 
         <script>
 
-            // JavaScript to handle the create group button click
-            document.getElementById('createClassLink').addEventListener('click', function (event) {
-                // Stop event propagation to prevent click on the group card
-                event.stopPropagation();
-
-                // Redirect the user to a new group creation page or display a form for creating a new group
-                window.location.href = './create_class.php';
-            });
-
-
-            // JavaScript to show/hide the popup and overlay
-            document.getElementById('addClassLink').addEventListener('click', function () {
-                document.getElementById('addClassPopup').style.display = 'block';
-                document.getElementById('overlay').style.display = 'block';
-            });
-
+        <?php if ($_SESSION["role"] == 1): // Teacher ?>
+            // JavaScript to handle the create class button click
+            if (document.getElementById('createClassLink')) {
+                document.getElementById('createClassLink').addEventListener('click', function (event) {
+                    event.stopPropagation();
+                        window.location.href = './create_class.php';
+                });
+            }
+        <?php elseif ($_SESSION["role"] == 0): // Student ?>
+            // JavaScript to show/hide the popup and overlay for adding a class
+            if (document.getElementById('addClassLink')) {
+                document.getElementById('addClassLink').addEventListener('click', function () {
+                    document.getElementById('addClassPopup').style.display = 'block';
+                    document.getElementById('overlay').style.display = 'block';
+                });
+            }
+        <?php endif; ?>
             document.getElementById('closePopup').addEventListener('click', function () {
                 document.getElementById('addClassPopup').style.display = 'none';
                 document.getElementById('overlay').style.display = 'none';
