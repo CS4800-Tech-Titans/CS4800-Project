@@ -95,10 +95,17 @@ else if ($_SESSION["role"] == 1)
 </head>
     <body>
         <div class="container">
-            <h2>Welcome, <?php echo $_SESSION["name"]; ?>!</h2>
-            <p>This is the dashboard. You are now authenticated. You are a <?=$roleStr?>.</p>
-            <a href="/classes">Go to my classes</a><br>
+        <h2>Welcome, <?php echo $_SESSION["name"]; ?>!</h2>
+        <p>This is the dashboard. You are now authenticated. You are a <?=$roleStr?>.</p>
+        <a href="/classes">Go to my classes</a><br>
+        
+        <?php if ($_SESSION["role"] == 0): ?>
+            <!-- Show 'Add a class' for students -->
             <a href="#" id="addClassLink">Add a class</a><br>
+        <?php elseif ($_SESSION["role"] == 1): ?>
+            <!-- Show 'Create a Class' for teachers -->
+            <a href="#" id="createClassLink">Create a class</a><br>
+        <?php endif; ?>
 
             <!-- Overlay to darken the background -->
             <div class="overlay" id="overlay"></div>
@@ -128,6 +135,17 @@ else if ($_SESSION["role"] == 1)
         </div>
 
         <script>
+
+            // JavaScript to handle the create group button click
+            document.getElementById('createClassLink').addEventListener('click', function (event) {
+                // Stop event propagation to prevent click on the group card
+                event.stopPropagation();
+
+                // Redirect the user to a new group creation page or display a form for creating a new group
+                window.location.href = './create_class.php';
+            });
+
+
             // JavaScript to show/hide the popup and overlay
             document.getElementById('addClassLink').addEventListener('click', function () {
                 document.getElementById('addClassPopup').style.display = 'block';
@@ -224,7 +242,7 @@ else if ($_SESSION["role"] == 1)
         document.getElementById('overlay').style.display = 'none';
     });
 
-    // ... (your existing JavaScript code)
+
 
 </script>
 

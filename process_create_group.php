@@ -50,7 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $userId = $_SESSION["userId"];
         
              // TODO: Replace this with the actual user role
-            $role = 1;
+            $role = 0;
         
             $linkInsertQuery->bind_param("iii", $userId, $newGroupId, $role);
         
