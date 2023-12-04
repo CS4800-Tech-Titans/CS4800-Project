@@ -26,9 +26,9 @@ if ($_SESSION["role"] == 0) { // if user is a student
 
     $studentGroupMemberships = $conn->prepare("SELECT
         groups.id, groups.name, users.id, users.name
-        FROM groups
+        FROM `groups`
         JOIN linkUserGroup ON groups.id = linkUserGroup.groupId
-        JOIN users ON linkUserGroup.userId = users.id
+        JOIN `users` ON linkUserGroup.userId = users.id
         WHERE groups.classId = ?;
     ");
     $studentGroupMemberships->bind_param("i", $classId);
@@ -88,8 +88,8 @@ if ($_SESSION["role"] == 0) { // if user is a student
             groupInvite.groupId, 
             groups.name
         FROM groupInvite
-        JOIN groups ON groupInvite.groupId = groups.id
-        JOIN users ON groupInvite.senderUserId = users.id
+        JOIN `groups` ON groupInvite.groupId = groups.id
+        JOIN `users` ON groupInvite.senderUserId = users.id
         WHERE groups.classId = ? 
         AND groupInvite.receiverUserId = ?;
     ");

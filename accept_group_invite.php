@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $role = 1;
 
         // Create an entry in the linkusergroup table
-        $linkInsertQuery = $conn->prepare("INSERT INTO linkusergroup (userId, groupId, role) VALUES (?, ?, ?)");
+        $linkInsertQuery = $conn->prepare("INSERT INTO linkUserGroup (userId, groupId, role) VALUES (?, ?, ?)");
 
         $linkInsertQuery->bind_param("iii", $userId, $groupId, $role);
 

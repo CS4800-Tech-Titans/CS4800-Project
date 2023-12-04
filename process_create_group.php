@@ -34,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         //$classId = 1;
         
         // Create an entry in the groups table
-        $insertQuery = $conn->prepare("INSERT INTO groups (name, description, classId, photo) VALUES (?, ?, ?, ?)");
+        $insertQuery = $conn->prepare("INSERT INTO `groups` (name, description, classId, photo) VALUES (?, ?, ?, ?)");
         
         $insertQuery->bind_param("ssib", $groupName, $groupDescription, $classId, $groupPhoto);
         
@@ -44,7 +44,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $newGroupId = $insertQuery->insert_id;
         
             // Create an entry in the linkusergroup table
-            $linkInsertQuery = $conn->prepare("INSERT INTO linkusergroup (userId, groupId, role) VALUES (?, ?, ?)");
+            $linkInsertQuery = $conn->prepare("INSERT INTO linkUserGroup (userId, groupId, role) VALUES (?, ?, ?)");
         
             // Define the user ID (fetched from the session)
             $userId = $_SESSION["userId"];
@@ -86,9 +86,9 @@ function getClassId($selectedClass) {
 
     // TODO: Replace this query with your actual database query
     $query = $conn->prepare("SELECT classes.id 
-                            FROM classes 
-                            JOIN linkuserclass ON classes.id = linkuserclass.classId
-                            WHERE classes.name = ? AND linkuserclass.userId = ?");
+                            FROM `classes `
+                            JOIN linkUserClass ON classes.id = linkUserClass.classId
+                            WHERE classes.name = ? AND linkUserClass.userId = ?");
     $query->bind_param("ss", $selectedClass, $_SESSION["userId"]);
 
     $query->execute();
