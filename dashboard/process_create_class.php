@@ -13,8 +13,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Define the user ID (fetched from the session)
         $userId = $_SESSION["userId"];
         
+   
         // Create an entry in the classs table
-        $insertQuery = $conn->prepare("INSERT INTO classses (name, teacherId, description) VALUES (?, ?, ?)");
+        $insertQuery = $conn->prepare("INSERT INTO classes (name, teacherId, description) VALUES (?, ?, ?)");
         
         $insertQuery->bind_param("sis", $className, $userId, $classDescription);
         
