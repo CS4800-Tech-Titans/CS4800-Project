@@ -248,9 +248,9 @@ if ($isStudent) { // if user is a student
                         <?= $student[1] ?>
                     </div>
 
-                    <?php if ($isStudent){ ?>
+                    <?php if ($isStudent) { ?>
                         <button class="invite-button" student-id="<?= $student[0] ?>" student-name = "<?= $student[1]?>">Invite</button>
-                    <?php}?>
+                    <?php } ?>
                     <!-- Add an invite button here -->
                     
                 </div>
