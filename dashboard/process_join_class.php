@@ -1,13 +1,8 @@
 
 <?php
-
 include_once "../protected/ensureLoggedIn.php";
-include "protected/connSql.php"; // Include the code to establish a database connection
+include_once "../protected/connSql.php";
 
-
-// Print to the console for debugging purposes
-error_log("I am in join_class");
-echo("kjl");
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -21,14 +16,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
 
         // Create an entry in the linkuserclass table
-        $linkInsertQuery = $conn->prepare("INSERT INTO linkuserclass (userId, classId,) VALUES (?, ?)");
+        $linkInsertQuery = $conn->prepare("INSERT INTO linkuserclass (userId, classId) VALUES (?, ?)");
 
-        $linkInsertQuery->bind_param("iii", $userId, $classId);
+        $linkInsertQuery->bind_param("ii", $userId, $classId);
 
         // Check if the entry creation is successful
         if ($linkInsertQuery->execute()) {
-            // Linkuserclass entry creation successful, redirect to a success page or back to the class listing
-            header("Location: /classes/{$classId}");
+             // Class and linkuserclass entry creation successful, redirect to a success page or back to the class listing
+             header("Location: /classes/{$classId}");
         } else {
             // Error handling: Display an error message or redirect to an error page
             echo "Failed to create a linkuserclass entry. Please try again.";

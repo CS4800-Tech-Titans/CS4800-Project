@@ -1,7 +1,7 @@
 <?php
-
 include_once "../protected/ensureLoggedIn.php";
-include "../protected/connSql.php";
+include_once "../protected/connSql.php";
+
 $roleStr = "";
 if (isset($_SESSION["role"])) {
     if ($_SESSION["role"] == 0) {
@@ -107,7 +107,7 @@ if (isset($_SESSION["role"])) {
                 };
                 
                 // Define the parameters to send to join_group.php
-                const params = `classId=${classId}, userId=${userId}`;
+                const params = `classId=${classId}&userId=${userId}`;
                 
                 xhr.open('POST', '/dashboard/process_join_class.php', true);
                 xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
@@ -117,9 +117,9 @@ if (isset($_SESSION["role"])) {
                 // Ensure classId is a valid integer
                 if (!isNaN(classId)) {
                     // Display the alert message with the joined classId
-                    alert('You joined class ' + classId + " " + userId);
+                    //alert('You joined class ' + classId + " " + userId);
                 } else {
-                    alert('Invalid classId.');
+                    alert('Invalid classId class does not exist.');
                 }
             } else {
                 // Implement the action for not joining the class

@@ -2,8 +2,7 @@
 include_once "../protected/ensureLoggedIn.php";
 include_once "../protected/connSql.php";
 
-$isStudent = $_SESSION["role"] == 0;
-if ($isStudent) { // if user is a student
+if ($_SESSION["role"] == 0) { // if user is a student
     $stmt = $conn->prepare("SELECT classes.name, classes.description, classes.teacherId, users.name AS teacherName
         FROM `classes`
         JOIN users ON classes.teacherId = users.id
@@ -248,11 +247,11 @@ if ($isStudent) { // if user is a student
                         <?= $student[1] ?>
                     </div>
 
-                    <?php if ($isStudent) { ?>
+<?php if ($isStudent) { ?>
                         <button class="invite-button" student-id="<?= $student[0] ?>" student-name = "<?= $student[1]?>">Invite</button>
                     <?php } ?>
                     <!-- Add an invite button here -->
-                    
+                    <button class="invite-button" student-id="<?= $student[0] ?>" student-name = "<?= $student[1]?>">Invite</button>
                 </div>
             </li>
         <?php } ?>
@@ -261,20 +260,17 @@ if ($isStudent) { // if user is a student
         <?php } ?>
         </ul>
         
-        <?php if ($isStudent) { ?>
-            
-            <h2 style="color:black;">My Invites</h2>
-            <?php foreach ($myInvites as $invite) { ?>
-                <div class="invite-card">
-                    <div class="invite-text">
-                        <?=$invite[2]?> has invited you to join '<?=$invite[4]?>'
-                    </div>
-                    <button class="button" onclick="acceptInvitation(<?=$invite[0]?>, <?=$invite[3]?>)">Accept Invitation</button>
+        <h2 style="color:black;">My Invites</h2>
+        <?php foreach ($myInvites as $invite) { ?>
+            <div class="invite-card">
+                <div class="invite-text">
+                    <?=$invite[2]?> has invited you to join '<?=$invite[4]?>'
                 </div>
-            <?php } ?>
-            <?php if (empty($myInvites)) { ?>
-                <p style="color:black">You have no invites.</p>
-            <?php } ?>
+                <button class="button" onclick="acceptInvitation(<?=$invite[0]?>, <?=$invite[3]?>)">Accept Invitation</button>
+            </div>
+        <?php } ?>
+        <?php if (empty($myInvites)) { ?>
+            <p style="color:black">You have no invites.</p>
         <?php } ?>
         
 </body>
@@ -308,7 +304,7 @@ if ($isStudent) { // if user is a student
     <?php if ($_SESSION["role"] == 1): // Teacher ?>
     // Additional JavaScript for QR Code generation and popup handling
     function createQRCode(classId) {
-        //const url = `http://localhost:8080/dashboard/join_class_page.php/${classId}`;
+        //const url = `http://groupup.pro/dashboard/join_class_page.php/${classId}`;
         const url = `http://localhost:8080/dashboard/join_class_page.php/${classId}`;
         
         new QRCode(document.getElementById("qrCode"), {
