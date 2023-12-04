@@ -4,6 +4,7 @@ include_once "../protected/ensureLoggedIn.php";
 include_once "../protected/connSql.php";
 
 $roleStr = "";
+$isGood = true;
 if (isset($_SESSION["role"])) {
     if ($_SESSION["role"] == 0) {
         $roleStr = "Student";
@@ -29,10 +30,8 @@ if (isset($_SESSION["role"])) {
 
     if (!$classQuery->fetch())
     {
-        http_response_code(404); 
-        include_once("../404.html");
-        die();
-    }
+        $isGood = false;
+    }   
 
 } else {
     // Redirect or handle the case where the role is not set in the session
@@ -99,6 +98,14 @@ if (isset($_SESSION["role"])) {
     <?php include "../sidebar.html"; ?>
 
     <div class="container">
+    <?php
+        if (!$isGood)
+        {
+            echo "<h2> Invalid Join Code </h2> </div>";
+            die();
+        }
+    ?>
+    
         <h2>Welcome, <?php echo isset($_SESSION["name"]) ? $_SESSION["name"] : 'Guest'; ?>!</h2>
         <p>Would you like to join the class <b><?=$className?></b></p>
 
@@ -143,7 +150,6 @@ if (isset($_SESSION["role"])) {
                 // Ensure classId is a valid integer
                 if (!isNaN(classId)) {
                     // Display the alert message with the joined classId
-                    
                     xhr.send(params);
                 } else {
                     alert('Invalid classId.');

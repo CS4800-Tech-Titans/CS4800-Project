@@ -171,7 +171,10 @@ else if ($_SESSION["role"] == 1)
             // Add event listeners for the two buttons inside the "Enter Class Code" popup
             document.getElementById('addClassBtn').addEventListener('click', function () {
                 // Implement the action for adding a class
-                alert('Add class functionality will be implemented here.');
+                joinCode = document.getElementById("classCodeInput").value;
+                window.open("/join_class/" + joinCode, '_blank');
+
+                // alert('Add class functionality will be implemented here.');
             });
 
             document.getElementById('cancelBtn').addEventListener('click', function () {
