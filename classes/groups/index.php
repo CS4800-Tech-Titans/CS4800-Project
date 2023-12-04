@@ -2,7 +2,7 @@
 include_once "../protected/ensureLoggedIn.php";
 include "../protected/connSql.php";
 
-$myGroup = -1;
+
 if ($_SESSION["role"] == 0) // student role
 {
     $stmt = $conn->prepare("SELECT groups.id, groups.name, groups.description, groups.photo, 
@@ -20,6 +20,19 @@ if ($_SESSION["role"] == 0) // student role
 
     $myGroup = null;
 }
+else
+{
+    $stmt = $conn->prepare("SELECT groups.id, groups.name, groups.description, groups.photo FROM `groups` WHERE classId = ?");
+
+    $stmt->bind_param("i", $classId);
+
+    $stmt->execute();
+
+    $stmt->bind_result($groupId, $groupName, $groupDescription, $groupPhoto);
+
+    $myGroup = -1;
+}
+
 $groupCount = 0;
 
 ?>
@@ -185,12 +198,16 @@ $groupCount = 0;
                         ?>
                         </p>
                         <?php
-                        if ($isUserInGroup) {
-                            $myGroup = $groupId;
-                            echo '<button class="leave-group-button" data-group-id="' . $groupId . '">Leave Group</button>';
-                        } else {
-                            echo '<button class="join-group-button" data-group-id="' . $groupId . '">Request to Join</button>';
+                        if ($isStudent)
+                        {
+                            if ($isUserInGroup) {
+                                $myGroup = $groupId;
+                                echo '<button class="leave-group-button" data-group-id="' . $groupId . '">Leave Group</button>';
+                            } else {
+                                echo '<button class="join-group-button" data-group-id="' . $groupId . '">Request to Join</button>';
+                            }
                         }
+                        
                         ?>
                     </div>
                 </a>

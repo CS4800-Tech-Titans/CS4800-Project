@@ -2,6 +2,8 @@
 include_once "../protected/ensureLoggedIn.php";
 include_once "../protected/connSql.php";
 
+$classJoinCode = "";
+
 $isStudent = $_SESSION["role"] == 0;
 if ($isStudent) { // if user is a student
     $stmt = $conn->prepare("SELECT classes.name, classes.description, classes.teacherId, users.name AS teacherName
@@ -25,52 +27,6 @@ if ($isStudent) { // if user is a student
     // Close the main statement
     $stmt->close();
 
-    $studentGroupMemberships = $conn->prepare("SELECT
-        groups.id, groups.name, users.id, users.name
-        FROM `groups`
-        JOIN linkUserGroup ON groups.id = linkUserGroup.groupId
-        JOIN `users` ON linkUserGroup.userId = users.id
-        WHERE groups.classId = ?;
-    ");
-    $studentGroupMemberships->bind_param("i", $classId);
-
-    $studentGroupMemberships->execute();
-
-    $studentGroupMemberships->bind_result($groupId, $groupName, $userId, $userName);
-
-    // PHP uses hashmap implementation of array apparently.
-    $groupMembers = array();
-
-    while ($studentGroupMemberships->fetch())
-    {
-        if (!isset($groupMembers[$groupId]))
-            $groupMembers[$groupId] = array();
-
-        // APPEND TO LIST. BASICALLY $groupMembers[$groupId].append(val)
-        $groupMembers[$groupId][] = $userName;
-    }
-
-    // Initialize an empty array for students
-    $students = array();
-
-    // Get the names of all students in the class
-    $studentsStmt = $conn->prepare("SELECT users.id, users.name
-        FROM `users`
-        JOIN linkUserClass ON users.id = linkUserClass.userId
-        WHERE linkUserClass.classId = ?");
-
-    $studentsStmt->bind_param("i", $classId);
-
-    $studentsStmt->execute();
-
-    $studentsStmt->bind_result($studentId, $studentName);
-
-    while ($studentsStmt->fetch()) {
-        $students[] = [$studentId, $studentName];
-    }
-
-    // Close the students statement
-    $studentsStmt->close();
 
 
     $myInvites = array();
@@ -109,7 +65,9 @@ if ($isStudent) { // if user is a student
     $invitesStmt->close();
 
 
-} else if ($_SESSION["role"] == 1) {  // if user is a teacher
+} 
+else if ($_SESSION["role"] == 1) 
+{  // if user is a teacher
     $stmt = $conn->prepare("SELECT classes.name, classes.description, classes.joinCode FROM `classes` WHERE classes.id = ? AND classes.teacherId = ?;");
 
 
@@ -132,7 +90,7 @@ if ($isStudent) { // if user is a student
     // Close the main statement
     
     // Initialize an empty array for students
-    $students = array();
+    /*$students = array();
 
     // Get the names of all students in the class, excluding the current user
     $studentsStmt = $conn->prepare("SELECT users.name
@@ -153,18 +111,64 @@ if ($isStudent) { // if user is a student
     // Close the students statement
     $studentsStmt->close();
 
-     $stmt = $conn->prepare("SELECT classes.name, classes.description, classes.teacherId, users.name AS teacherName
+    /*$stmt = $conn->prepare("SELECT classes.name, classes.description, classes.teacherId, users.name AS teacherName
         FROM `classes`
         JOIN users ON classes.teacherId = users.id
-        JOIN linkUserClass ON linkUserClass.userId = ? AND linkUserClass.classId = ?
         WHERE classes.id = ?;");
 
-    $stmt->bind_param("iii", $_SESSION["userId"], $classId, $classId);
+    $stmt->bind_param("i",$classId);
 
     $stmt->execute();
 
-    $stmt->bind_result($className, $classDescription, $teacherId, $teacherName);
+    $stmt->bind_result($className, $classDescription, $teacherId, $teacherName);*/
 }
+// Initialize an empty array for students
+$students = array();
+
+// Get the names of all students in the class
+$studentsStmt = $conn->prepare("SELECT users.id, users.name
+    FROM `users`
+    JOIN linkUserClass ON users.id = linkUserClass.userId
+    WHERE linkUserClass.classId = ?");
+
+$studentsStmt->bind_param("i", $classId);
+
+$studentsStmt->execute();
+
+$studentsStmt->bind_result($studentId, $studentName);
+
+while ($studentsStmt->fetch()) {
+    $students[] = [$studentId, $studentName];
+}
+
+$studentGroupMemberships = $conn->prepare("SELECT
+groups.id, groups.name, users.id, users.name
+FROM `groups`
+JOIN linkUserGroup ON groups.id = linkUserGroup.groupId
+JOIN `users` ON linkUserGroup.userId = users.id
+WHERE groups.classId = ?;
+");
+$studentGroupMemberships->bind_param("i", $classId);
+
+$studentGroupMemberships->execute();
+
+$studentGroupMemberships->bind_result($groupId, $groupName, $userId, $userName);
+
+// PHP uses hashmap implementation of array apparently.
+$groupMembers = array();
+
+while ($studentGroupMemberships->fetch())
+{
+if (!isset($groupMembers[$groupId]))
+    $groupMembers[$groupId] = array();
+
+// APPEND TO LIST. BASICALLY $groupMembers[$groupId].append(val)
+$groupMembers[$groupId][] = $userName;
+}
+
+
+// Close the students statement
+$studentsStmt->close();
 
 ?>
 
@@ -291,7 +295,7 @@ if ($isStudent) { // if user is a student
 <script src="https://rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
 
 <script>
-
+    
     const joinCode = '<?=$classJoinCode?>';
     const joinUrl = "http://" + window.location.host + "/join_class/" + joinCode;
 
