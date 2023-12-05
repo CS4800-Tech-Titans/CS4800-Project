@@ -5,6 +5,7 @@ include_once "../protected/connSql.php";
 $classJoinCode = "";
 
 $isStudent = $_SESSION["role"] == 0;
+$myUserId = $_SESSION["userId"];
 if ($isStudent) { // if user is a student
     $stmt = $conn->prepare("SELECT classes.name, classes.description, classes.teacherId, users.name AS teacherName
         FROM `classes`
@@ -281,6 +282,12 @@ $studentsStmt->close();
             margin-bottom: 10px;
         }
 
+        #profile-modal button:disabled{
+            opacity: 0.5; 
+            cursor: not-allowed;
+            
+        }
+
         #profile-close-btn {
             position: absolute;
             top: 10px;
@@ -404,6 +411,7 @@ $studentsStmt->close();
 <script src="https://rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
 
 <script>
+    myUserId = <?=$myUserId?>;
     function openProfileModal(userId)
     {
         
@@ -427,6 +435,20 @@ $studentsStmt->close();
                     document.getElementById("modal-user-photo").src = 'data:image/*;base64, '+userProfile.photo;
                 else
                     document.getElementById("modal-user-photo").src = "/images/defaultProfilePicture.jpg";
+
+                if (userId == myUserId)
+                {
+                    document.getElementById("invite-btn").style.display = 'none';
+                    document.getElementById("message-btn").style.display = 'none';
+                }
+                else
+                {
+                    var inviteBtn = document.getElementById("invite-btn");
+                    inviteBtn.style.display = 'inline-block';
+                    inviteBtn.onclick = () => inviteUserToGroup(userId, inviteBtn);
+                    document.getElementById("message-btn").style.display = 'inline-block';
+                }
+
                 document.getElementById("profile-overlay").style.display = "block";
                 document.getElementById("profile-modal").style.display = "block";
             }
@@ -441,6 +463,29 @@ $studentsStmt->close();
 
        
     }
+
+    function inviteUserToGroup(studentId, button)
+    {
+        const xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                // Handle the response, if needed
+                //console.log('Join group response:', xhr.responseText);
+                // Refresh the page after the join is successful
+                //location.reload();
+                button.innerHTML = "Invited";
+                button.disabled = true;
+            }
+        };
+
+        // Define the parameters to send to join_group.php
+        const params = `groupId=${myGroupId}&receiverUserId=${studentId}&message=none`;
+
+        xhr.open('POST', '/invite_user_to_group.php', true);
+        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xhr.send(params);
+    }
+
 
     function closeProfilePopup() {
         document.getElementById("profile-overlay").style.display = "none";
