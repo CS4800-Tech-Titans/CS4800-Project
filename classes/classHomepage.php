@@ -224,11 +224,129 @@ $studentsStmt->close();
             cursor: pointer;
             font-size: 14px;
         }
+
+        #profile-modal button {
+            background-color: #d6eaff;
+            color: rgb(0, 0, 0);
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+
+        #profile-overlay {
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5); /* Dim overlay color */
+            z-index: 1; /* Higher z-index than the popup */
+        }
+
+        #profile-modal {
+            font-family: Arial, sans-serif;
+            display: block;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 40px;
+            background-color: white;
+            border: 1px solid #ddd;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 2;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+
+        #modal-bio-container {
+            text-align: left;
+            width: 100%;
+        }
+
+        #profile-modal h2 {
+            color: #333;
+        }
+
+        #profile-modal img {
+            max-width: 100%;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+        #close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #ddd;
+            color: #333;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        #user-list {
+            list-style-type: none;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        #user-list li {
+            background-color: white;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            text-align: center;
+            display: flex;
+            flex-direction: column; 
+            justify-content: center; 
+        }
+
+        #user-list h3 {
+            margin-top: 10px;
+            margin-bottom: 10px;
+            margin-left: 0px;
+            margin-right: 0px;
+
+        }
+
+        #user-list li:hover {
+            transform: scale(1.05);
+        }
     </style>
 
 </head>
 
 <body translate="no">
+    <div id="profile-overlay"></div>
+
+    <div id="profile-modal">
+        <img id="modal-user-photo" src="https://placekitten.com/200/200" alt="User Profile">
+        <h1 id="modal-user-name">First Last</h1>  
+
+        <div id="modal-bio-container">
+            <h3>Bio</h3>
+            <p id="modal-user-bio">We know nothing about this guy.</p>
+        </div>
+        <br>
+        <button id="invite-btn" onclick="closeProfilePopup()">Invite to Group</button>
+        <button id="message-btn" onclick="closeProfilePopup()">Private Message</button>
+        <button id="close-btn" onclick="closeProfilePopup()">X</button> 
+
+        <!-- Add more profile information as needed -->
+    </div>
+
     <h1><br></h1>
     <h1 style="color:black;">
         <?= $className ?>
@@ -254,25 +372,16 @@ $studentsStmt->close();
 
 <body translate="no">
     <h2 style="color:black;">Students</h2>
-    <ul class="cards">
+    <ul id="user-list">
         <?php foreach ($students as $student) { ?>
-            <li class="cards__item">
-                <div class="card__content">
-                    <div class="card__title">
-                        <?= $student[1] ?>
-                    </div>
-
-                    <?php if ($isStudent) { ?>
-                        <button class="invite-button" student-id="<?= $student[0] ?>" student-name = "<?= $student[1]?>">Invite</button>
-                    <?php } ?>
-                    
-                </div>
+            <li onclick="openProfileModal(<?=$student[0]?>)">
+                <h3><?= $student[1] ?></h3>
             </li>
         <?php } ?>
         <?php if (empty($students)) { ?>
             <p style="color:black">There are no students in this class.</p>
         <?php } ?>
-        </ul>
+    </ul>
         
         <?php if ($isStudent) { ?>
             <h2 style="color:black;">My Invites</h2>
@@ -295,7 +404,48 @@ $studentsStmt->close();
 <script src="https://rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
 
 <script>
-    
+    function openProfileModal(userId)
+    {
+        
+        const xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) 
+            {
+                userProfile = JSON.parse(xhr.responseText);
+                
+                document.getElementById("modal-user-name").innerHTML = userProfile.name;
+
+                if (userProfile.bio)
+                {
+                    document.getElementById("modal-user-bio").innerHTML = userProfile.bio;
+                    document.getElementById("modal-bio-container").style.display = "block";
+                }
+                else
+                    document.getElementById("modal-bio-container").style.display = "none";
+
+                if (userProfile.photo)
+                    document.getElementById("modal-user-photo").src = 'data:image/*;base64, '+userProfile.photo;
+                else
+                    document.getElementById("modal-user-photo").src = "/images/defaultProfilePicture.jpg";
+                document.getElementById("profile-overlay").style.display = "block";
+                document.getElementById("profile-modal").style.display = "block";
+            }
+        };
+
+        // Define the parameters to send to join_group.php
+        const params = `userId=`+userId;
+
+        xhr.open('POST', '/get_user_profile.php', true);
+        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xhr.send(params);
+
+       
+    }
+
+    function closeProfilePopup() {
+        document.getElementById("profile-overlay").style.display = "none";
+        document.getElementById("profile-modal").style.display = "none";
+    }
     const joinCode = '<?=$classJoinCode?>';
     const joinUrl = "http://" + window.location.host + "/join_class/" + joinCode;
 

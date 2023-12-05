@@ -114,7 +114,7 @@ else if ($_SESSION["role"] == 1)
         <div class="centered-link">
         <?php if ($_SESSION["role"] == 0): ?>
             <!-- Show 'Add a class' for students -->
-            <a href="#" id="addClassLink">Add a class</a>
+            <a href="#" id="addClassLink">Join a class</a>
         <?php elseif ($_SESSION["role"] == 1): ?>
             <!-- Show 'Create a Class' for teachers -->
             <a href="#" id="createClassLink">Create a class</a>
@@ -127,9 +127,9 @@ else if ($_SESSION["role"] == 1)
             <!-- Popup content for adding a class -->
             <div id="addClassPopup" class="popup">
                 <span class="close-btn" id="closePopup">&times;</span>
-                <h3>Add a Class</h3>
+                <h3>Join a Class</h3>
                 <div class="popup-buttons">
-                    <button id="scanQRBtn">Scan QR</button>
+                    <button id="scanQRBtn">Scan QR Code</button>
                     <button id="enterCodeBtn">Enter Class Code</button>
                 </div>
             </div>

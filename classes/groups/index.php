@@ -173,7 +173,7 @@ $groupCount = 0;
             <a class="card" id="card<?= $groupId ?>">
                     <div class="card__image" style="<?php
                     if ($groupPhoto === null)
-                        echo "background-image: url(https://unsplash.it/800/600?image=82);";
+                        echo "background-image: url(/images/defaultGroupImage.jpg);";
                     else
                         echo "background-image: url(data:image/*;base64," . base64_encode($groupPhoto);
                     ?>)"></div>
