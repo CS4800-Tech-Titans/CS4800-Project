@@ -453,6 +453,9 @@ $studentsStmt->close();
                     document.getElementById("message-btn").style.display = 'inline-block';
                 }
 
+                button.innerHTML = "Invite to Group";
+                button.disabled = false;
+
                 document.getElementById("profile-overlay").style.display = "block";
                 document.getElementById("profile-modal").style.display = "block";
             }
