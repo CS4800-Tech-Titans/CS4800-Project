@@ -4,7 +4,7 @@
 
     if ($_SESSION["role"] == 0) // student role
     {
-        $stmt = $conn->prepare("SELECT classes.id, classes.name, users.name FROM classes JOIN 
+        $stmt = $conn->prepare("SELECT classes.id, classes.name, users.name, classes.photo FROM classes JOIN 
         ( 
             SELECT classId FROM linkUserClass WHERE userId = ? 
         ) subquery 
@@ -20,11 +20,11 @@
 
         $stmt->execute();
 
-        $stmt->bind_result($classId, $className, $teacherName);
+        $stmt->bind_result($classId, $className, $teacherName, $classPhoto);
     }
     else if ($_SESSION["role"] == 1) 
     {
-        $stmt = $conn->prepare("SELECT classes.id, classes.name FROM `classes` WHERE classes.teacherId = ?;");
+        $stmt = $conn->prepare("SELECT classes.id, classes.name, classes.photo FROM `classes` WHERE classes.teacherId = ?;");
 
         // SQL query here gets the classes that the user is teacher of, since this user is a teacher (role is 1). Nice simple query. 
 
@@ -32,7 +32,7 @@
 
         $stmt->execute();
 
-        $stmt->bind_result($classId, $className);
+        $stmt->bind_result($classId, $className, $classPhoto);
         $teacherName = "";
     }
     
@@ -57,7 +57,13 @@
             $classCount++;?>
             <li class="cards__item">
                 <a href="<?=$classId?>" class="card" outline=none>
-                    <div class="card__image" style="background-image: url('https://www.w3schools.com/images/colorpicker2000.png');"></div>
+                    <div class="card__image" style="<?php
+                    if ($classPhoto === null)
+                        echo "background-image: url(/images/defaultClassPicture.png);";
+                    else
+                        echo "background-image: url(data:image/*;base64," . base64_encode($classPhoto);
+                        ?>)">
+                    </div>
                     <div class="card__content">
                         <div class="card__title"><?=$className?></div>
                         <p class="card__text"><?=$teacherName?></p>

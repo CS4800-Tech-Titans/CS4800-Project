@@ -46,7 +46,7 @@ $groupCount = 0;
     <title>Your Page Title</title>
     <style>
         <?php include "style.css" ?>
-        /* Add custom CSS for the plus button */
+        
         .add-group-button {
             position: fixed;
             bottom: 20px;
@@ -74,7 +74,6 @@ $groupCount = 0;
             /* Add the text on hover */
         }
 
-        /* Ensure card is clickable and cursor changes to pointer */
         .card {
             cursor: pointer;
         }
@@ -152,7 +151,12 @@ $groupCount = 0;
             max-width: 100%;
             margin-top: 10px;
             margin-bottom: 10px;
-            border: 3px solid black;
+            border: 0px solid black;
+            max-height: 300px;
+            max-width: 100%;
+            height: auto; 
+            width: auto;
+            object-fit: contain;
         }
 
         .buttons input,
@@ -389,7 +393,7 @@ $groupCount = 0;
         });
         document.getElementById("closeModal").addEventListener("click", () => {
             document.getElementById("modalContainer").classList.remove("show");
-        })
+        });
     </script>
 </body>
 

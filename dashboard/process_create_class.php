@@ -35,6 +35,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $className = $_POST["className"];
         $classDescription = $_POST["classDescription"];
         
+
+        $imageContent = null;
+
+        if (isset($_FILES["image"]) && $_FILES["image"]["error"] == UPLOAD_ERR_OK) 
+        {
+            $imagePath = $_FILES["image"]["tmp_name"];
+            $imageContent = file_get_contents($imagePath);
+        }
+        
         // Define the user ID (fetched from the session)
         $userId = $_SESSION["userId"];
         
@@ -47,17 +56,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Create an entry in the classs table
         $insertQuery = $conn->prepare("INSERT INTO classes (name, teacherId, description, photo, joinCode) VALUES (?, ?, ?, ?, ?)");
-        
-        $imageContent = null;
 
         $insertQuery->bind_param("sisss", $className, $userId, $classDescription, $imageContent, $joinCode);
         
         // Check if class creation is successful
         if ($insertQuery->execute()) {
             // Get the ID of the newly created class
-            /*newClassId = $insertQuery->insert_id;
+            $newClassId = $insertQuery->insert_id;
         
-            // Create an entry in the linkUserClass table
+            /*// Create an entry in the linkUserClass table
             $linkInsertQuery = $conn->prepare("INSERT INTO linkUserClass (userId, classId) VALUES (?, ?)");
         
            
@@ -74,6 +81,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         
             $linkInsertQuery->close(); // Close the prepared statement*/
+
+            header("Location: /classes/{$newClassId}");
         } else {
             // Error handling: Display an error message or redirect to an error page
             echo "Class creation failed. Please try again.";

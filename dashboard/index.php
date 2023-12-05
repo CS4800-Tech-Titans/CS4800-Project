@@ -168,6 +168,91 @@ else if ($_SESSION["role"] == 1)
             cursor: pointer;
         }
 
+        .modal-container {
+            /*display: none;
+            align-items: center;*/
+            z-index: 10;
+            background-color: rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 100vw;
+            position: fixed;
+
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.40s ease
+        }
+
+        .modal-container.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .inner-modal-container {
+            max-height: 100%;
+            overflow-y: auto;
+        }
+
+        .modal {
+            background-color: white;
+            border-radius: 10px;
+            width: 600px;
+            padding: 30px;
+            overflow-y: auto;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            color:black;
+            font-size: 18px;
+            font-weight: bold;
+
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            font-size: 18px;
+            margin: 20px 0px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            font-family: Arial, sans-serif;
+            font-size: 18px;
+            line-height: 1.2;
+        }
+
+
+        .form-group textarea {
+            resize: none;
+            overflow-y: hidden;
+        }
+
+        .form-group textarea.max-size {
+            overflow-y: visible;
+        }
+
+        #img-preview {
+           
+            margin-top: 10px;
+            margin-bottom: 10px;
+            border: 0px solid black;
+            max-height: 300px;
+            max-width: 100%;
+            height: auto; 
+            width: auto;
+            object-fit: contain;           
+
+        }
+
+        .buttons input,
+        .buttons button {
+            font-size: 18px;
+        }
+
         
 
     </style>
@@ -195,6 +280,41 @@ else if ($_SESSION["role"] == 1)
             <button id="profile-save-btn" type="submit">Save</button>
             <button id="profile-close-btn" type="button" onclick="closeProfilePopup()">X</button>
         </form>
+    </div>
+
+    <div class="modal-container" id="modalContainer">
+        <div class="inner-modal-container">
+
+            <div class="modal">
+                <h1>Create New Class</h1>
+                <form method="POST" action=<?= "process_create_class.php"?> enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="image">Class Icon</label>
+                        <img id="img-preview" src="/images/defaultClassPicture.png" alt="Default Image"
+                            onclick="document.getElementById('image').click()">
+                        <input type="file" id="image" name="image" accept="image/*"
+                            onchange="displayImagePreviewClass(this)">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="className">Name</label>
+                        <input type="text" id="name" name="className" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="classDescription">Description</label>
+                        <textarea id="classDescription" name="classDescription" rows="4" cols="50" oninput="resizeTextArea(this)"
+                            required></textarea>
+                    </div>
+
+                    <div class="buttons">
+                        <input type="submit" value="Create Class">
+                        <button type="button" id="closeModal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
     </div>
 
         <div class="container">
@@ -267,6 +387,38 @@ else if ($_SESSION["role"] == 1)
             }
         }
 
+        function displayImagePreviewClass(input) {
+            var preview = document.getElementById('img-preview');
+            var file = input.files[0];
+            var reader = new FileReader();
+
+            reader.onloadend = function () {
+                preview.src = reader.result;
+            }
+
+            if (file) {
+                reader.readAsDataURL(file);
+            } else {
+                //preview.src = "defaultGroupImage.jpg";
+            }
+        }
+
+        function resizeTextArea(textarea) {
+            textarea.style.height = 'auto';
+            newHeight = textarea.scrollHeight;
+
+            const maxHeight = 35 * parseFloat(getComputedStyle(textarea).lineHeight);
+
+            if (newHeight > maxHeight) {
+                textarea.style.height = maxHeight + "px";
+                textarea.classList.add("max-size");
+            }
+            else {
+                textarea.style.height = newHeight + "px";
+                textarea.classList.remove("max-size");
+            }
+        }
+
         function openProfileModal()
         {
             const xhr = new XMLHttpRequest();
@@ -289,7 +441,6 @@ else if ($_SESSION["role"] == 1)
                 }
             };
 
-            // Define the parameters to send to join_group.php
             const params = `userId=`+userId;
 
             xhr.open('POST', '/get_user_profile.php', true);
@@ -304,12 +455,18 @@ else if ($_SESSION["role"] == 1)
 
         <?php if ($_SESSION["role"] == 1): // Teacher ?>
             // JavaScript to handle the create class button click
-            if (document.getElementById('createClassLink')) {
+            /*if (document.getElementById('createClassLink')) {
                 document.getElementById('createClassLink').addEventListener('click', function (event) {
                     event.stopPropagation();
                         window.location.href = './create_class.php';
                 });
-            }
+            }*/
+            document.getElementById("createClassLink").addEventListener("click", () => {
+                document.getElementById("modalContainer").classList.add("show");
+            });
+            document.getElementById("closeModal").addEventListener("click", () => {
+                document.getElementById("modalContainer").classList.remove("show");
+            });
         <?php elseif ($_SESSION["role"] == 0): // Student ?>
             // JavaScript to show/hide the popup and overlay for adding a class
             if (document.getElementById('addClassLink')) {
@@ -347,6 +504,8 @@ else if ($_SESSION["role"] == 1)
                 document.getElementById('enterCodePopup').style.display = 'none';
                 document.getElementById('overlay').style.display = 'none';
             });
+
+            
 
         </script>
         <!-- Add a new popup for QR code scanning -->
