@@ -17,12 +17,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 	$conn = new mysqli($servername, $dbuser, $dbpass, $dbname, 3307);
 
-	$stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
+	$stmt = $conn->prepare("SELECT users.id, users.name, users.email, users.password, users.role FROM users WHERE email = ?");
 	$stmt->bind_param("s", $email);
 
 	$stmt->execute();
 
-	$stmt->bind_result($userId, $userName, $column3, $userHashedPass, $userRole /* and so on for all columns */);
+	$stmt->bind_result($userId, $userName, $column3, $userHashedPass, $userRole);
 
 	// Fetch and process the results
 	if (!$stmt->fetch()) {
