@@ -79,11 +79,11 @@ img {
 .card__image {
   background-position: center center;
   background-repeat: no-repeat;
-  /*background-size: cover;*/
-  background-size: 100% 100%;
+  background-size: contain;
+  
   border-top-left-radius: 0.25rem;
   border-top-right-radius: 0.25rem;
-  filter: contrast(70%);
+ 
   overflow: hidden;
   position: relative;
   transition: filter 0.5s cubic-bezier(0.43, 0.41, 0.22, 0.91);
