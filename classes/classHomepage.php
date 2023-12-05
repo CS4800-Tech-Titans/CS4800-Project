@@ -358,7 +358,7 @@ $studentsStmt->close();
     <h1 style="color:black;">
         <?= $className ?>
     </h1>
-    <p style="color:black;">Instructor:
+    <p style="color:black;"><b>Instructor:</b>
         <?= $teacherName ?>
     </p>
     <p style="color:black;">
