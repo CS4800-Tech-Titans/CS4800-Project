@@ -366,9 +366,12 @@ $studentsStmt->close();
     </p>
 
     <?php if ($_SESSION["role"] == 1): // Check if the user is a teacher ?>
-        <p style="color:black;">Join Code: <?=$classJoinCode?><p>
-        <button id="copyInviteLink" onclick="copyInviteLink()">Copy Invite Link</button>
-        <button id="showQRCodeBtn">Show QR Code</button>
+        <br>
+        <p style="color:black;margin:0px;"><b>Join Code: </b><?=$classJoinCode?></p>
+        <div style="display: inline-flex; margin: 0px;">
+            <p id="classInviteLinkTxt" style="color:black;margin-top:5px;margin-bottom:5px;"></p>
+            <button id="showQRCodeBtn" style="margin-left: 25px;">Show QR Code</button>
+        </div>
         <div id="qrCodePopup" class="qr-code-popup">
             <span class="close-btn" id="closeQRCodePopup" font-size="20px">&times;</span>
             <h3>Your QR Code</h3>
@@ -494,6 +497,8 @@ $studentsStmt->close();
     }
     const joinCode = '<?=$classJoinCode?>';
     const joinUrl = "http://" + window.location.host + "/join_class/" + joinCode;
+
+    document.getElementById('classInviteLinkTxt').innerHTML = "<b>Invite Link: </b>" + joinUrl;
 
     function copyInviteLink()
     {
