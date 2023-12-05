@@ -347,7 +347,7 @@ $studentsStmt->close();
             <p id="modal-user-bio">We know nothing about this guy.</p>
         </div>
         <br>
-        <button id="invite-btn" onclick="closeProfilePopup()">Invite to Group</button>
+        <button id="invite-btn">Invite to Group</button>
         <button id="message-btn" onclick="closeProfilePopup()">Private Message</button>
         <button id="profile-close-btn" onclick="closeProfilePopup()">X</button> 
 
@@ -397,7 +397,8 @@ $studentsStmt->close();
                     <div class="invite-text">
                         <?=$invite[2]?> has invited you to join '<?=$invite[4]?>'
                     </div>
-                    <button class="button" onclick="acceptInvitation(<?=$invite[0]?>, <?=$invite[3]?>)">Accept Invitation</button>
+                    <button class="button" style="background-color:#4CAF50" onclick="acceptInvitation(<?=$invite[0]?>, <?=$invite[3]?>)">Accept</button>
+                    <button class="button" style="background-color:#f44336" onclick="rejectInvitation(<?=$invite[0]?>, <?=$invite[3]?>)">Reject</button>
                 </div>
             <?php } ?>
             <?php if (empty($myInvites)) { ?>
@@ -522,6 +523,29 @@ $studentsStmt->close();
         xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
         xhr.send(params);
     }
+    function rejectInvitation(inviteId, groupId)
+    {
+        console.log('Rejecting invite: ' + inviteId + " For group id: " + groupId);
+
+        // Call join_group.php directly using AJAX
+        const xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                // Handle the response, if needed
+                console.log('Reject Invite Response:', xhr.responseText);
+                // Refresh the page after the join is successful
+                location.reload();
+            }
+        };
+
+        // Define the parameters to send to join_group.php
+        const params = `inviteId=${inviteId}&groupId=${groupId}`;
+
+        xhr.open('POST', '/reject_group_invite.php', true);
+        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xhr.send(params);
+    }
+
     <?php if ($_SESSION["role"] == 1): // Teacher ?>
     // Additional JavaScript for QR Code generation and popup handling
     function createQRCode(classId) {
