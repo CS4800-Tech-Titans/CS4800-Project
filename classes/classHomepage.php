@@ -440,21 +440,22 @@ $studentsStmt->close();
                 else
                     document.getElementById("modal-user-photo").src = "/images/defaultProfilePicture.jpg";
 
+                var inviteBtn = document.getElementById("invite-btn");
                 if (userId == myUserId)
                 {
-                    document.getElementById("invite-btn").style.display = 'none';
+                    inviteBtn.style.display = 'none';
                     document.getElementById("message-btn").style.display = 'none';
                 }
                 else
                 {
-                    var inviteBtn = document.getElementById("invite-btn");
+                    
                     inviteBtn.style.display = 'inline-block';
                     inviteBtn.onclick = () => inviteUserToGroup(userId, inviteBtn);
                     document.getElementById("message-btn").style.display = 'inline-block';
                 }
 
-                button.innerHTML = "Invite to Group";
-                button.disabled = false;
+                inviteBtn.innerHTML = "Invite to Group";
+                inviteBtn.disabled = false;
 
                 document.getElementById("profile-overlay").style.display = "block";
                 document.getElementById("profile-modal").style.display = "block";
@@ -498,10 +499,15 @@ $studentsStmt->close();
         document.getElementById("profile-overlay").style.display = "none";
         document.getElementById("profile-modal").style.display = "none";
     }
-    const joinCode = '<?=$classJoinCode?>';
-    const joinUrl = "http://" + window.location.host + "/join_class/" + joinCode;
 
-    document.getElementById('classInviteLinkTxt').innerHTML = "<b>Invite Link: </b>" + joinUrl;
+    <?php 
+    if ($_SESSION["role"] == 1) { ?>
+
+        const joinCode = '<?=$classJoinCode?>';
+        const joinUrl = "http://" + window.location.host + "/join_class/" + joinCode;
+        
+        document.getElementById('classInviteLinkTxt').innerHTML = "<b>Invite Link: </b>" + joinUrl;
+    <?php } ?>
 
     function copyInviteLink()
     {
