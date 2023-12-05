@@ -16,6 +16,9 @@ else if ($_SESSION["role"] == 1)
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <style>
+        * {
+            box-sizing: border-box;
+        }
         /* CSS styles for the dashboard page */
         body {
             font-family: Arial, sans-serif;
@@ -95,6 +98,78 @@ else if ($_SESSION["role"] == 1)
             margin: 0 10px;
             cursor: pointer;
         }
+
+        #profile-modal button {
+            background-color: #d6eaff;
+            color: rgb(0, 0, 0);
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+
+        #profile-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5); /* Dim overlay color */
+            z-index: 1; /* Higher z-index than the popup */
+        }
+
+        #profile-modal {
+            font-family: Arial, sans-serif;
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 40px;
+            background-color: white;
+            border: 1px solid #ddd;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 2;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        #modal-bio-container {
+            text-align: left;
+            width: 100%;
+
+        }
+
+        #profile-modal h2 {
+            color: #333;
+        }
+
+        #profile-modal img {
+            max-width: 50%;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+        #profile-close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #ddd;
+            color: #333;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        
+
     </style>
 
     <!-- Adds neccissary libraries for qr scanner -->
@@ -103,6 +178,25 @@ else if ($_SESSION["role"] == 1)
 
 </head>
     <body>
+       
+    <div id="profile-overlay"></div>
+
+    <div id="profile-modal">
+        <form id="profile-form" action="/set_user_profile.php" method="post" enctype="multipart/form-data">
+            <img id="modal-user-photo" alt="User Profile" onclick="document.getElementById('image').click()"><br>
+            <input type="file" id="image" name="image" accept="image/*" onchange="displayImagePreview(this)">
+            <h1 id="modal-user-name">First Last</h1>  
+
+            <div id="modal-bio-container">
+                <h3>Bio</h3>
+                <textarea id="modal-user-bio" name="bio" style="width:100%; font-family: Arial, sans-serif; font-size: 16px;" rows="4" cols="50"></textarea>
+            </div>
+            <br>
+            <button id="profile-save-btn" type="submit">Save</button>
+            <button id="profile-close-btn" type="button" onclick="closeProfilePopup()">X</button>
+        </form>
+    </div>
+
         <div class="container">
         <h2 style="margin-bottom: 0px">Welcome, <?php echo $_SESSION["name"]; ?>!</h2>
         <p>Account type: <b><?=$roleStr?></b></p>
@@ -144,12 +238,69 @@ else if ($_SESSION["role"] == 1)
                     <button id="cancelBtn">Cancel</button>
                 </div>
             </div>
+
+            <div class="centered-link">
+            <a href="#" onclick="openProfileModal()">Edit my profile</a>
+            </div>
+
             <div class="centered-link">
             <a href="/logout">Logout</a>
             </div>
         </div>
 
         <script>
+        userId = <?=$_SESSION["userId"]?>;
+
+        function displayImagePreview(input) {
+            var preview = document.getElementById('modal-user-photo');
+            var file = input.files[0];
+            var reader = new FileReader();
+
+            reader.onloadend = function () {
+                preview.src = reader.result;
+            }
+
+            if (file) {
+                reader.readAsDataURL(file);
+            } else {
+                //preview.src = "defaultGroupImage.jpg";
+            }
+        }
+
+        function openProfileModal()
+        {
+            const xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) 
+                {
+                    userProfile = JSON.parse(xhr.responseText);
+
+                    document.getElementById("modal-user-name").innerHTML = userProfile.name;
+
+                    document.getElementById("modal-user-bio").innerHTML = userProfile.bio;
+
+                    if (userProfile.photo)
+                        document.getElementById("modal-user-photo").src = 'data:image/*;base64, '+userProfile.photo;
+                    else
+                        document.getElementById("modal-user-photo").src = "/images/defaultProfilePicture.jpg";
+                    
+                    document.getElementById("profile-overlay").style.display = "block";
+                    document.getElementById("profile-modal").style.display = "block";
+                }
+            };
+
+            // Define the parameters to send to join_group.php
+            const params = `userId=`+userId;
+
+            xhr.open('POST', '/get_user_profile.php', true);
+            xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            xhr.send(params);
+        }
+
+        function closeProfilePopup() {
+            document.getElementById("profile-overlay").style.display = "none";
+            document.getElementById("profile-modal").style.display = "none";
+        }
 
         <?php if ($_SESSION["role"] == 1): // Teacher ?>
             // JavaScript to handle the create class button click
@@ -196,6 +347,7 @@ else if ($_SESSION["role"] == 1)
                 document.getElementById('enterCodePopup').style.display = 'none';
                 document.getElementById('overlay').style.display = 'none';
             });
+
         </script>
         <!-- Add a new popup for QR code scanning -->
         <div id="qrScannerPopup" class="popup">

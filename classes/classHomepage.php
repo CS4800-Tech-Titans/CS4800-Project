@@ -239,7 +239,7 @@ $studentsStmt->close();
         }
 
         #profile-overlay {
-            display: block;
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
@@ -251,7 +251,7 @@ $studentsStmt->close();
 
         #profile-modal {
             font-family: Arial, sans-serif;
-            display: block;
+            display: none;
             position: fixed;
             top: 50%;
             left: 50%;
@@ -281,7 +281,7 @@ $studentsStmt->close();
             margin-bottom: 10px;
         }
 
-        #close-btn {
+        #profile-close-btn {
             position: absolute;
             top: 10px;
             right: 10px;
@@ -332,7 +332,7 @@ $studentsStmt->close();
     <div id="profile-overlay"></div>
 
     <div id="profile-modal">
-        <img id="modal-user-photo" src="https://placekitten.com/200/200" alt="User Profile">
+        <img id="modal-user-photo" alt="User Profile">
         <h1 id="modal-user-name">First Last</h1>  
 
         <div id="modal-bio-container">
@@ -342,7 +342,7 @@ $studentsStmt->close();
         <br>
         <button id="invite-btn" onclick="closeProfilePopup()">Invite to Group</button>
         <button id="message-btn" onclick="closeProfilePopup()">Private Message</button>
-        <button id="close-btn" onclick="closeProfilePopup()">X</button> 
+        <button id="profile-close-btn" onclick="closeProfilePopup()">X</button> 
 
         <!-- Add more profile information as needed -->
     </div>
