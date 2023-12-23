@@ -400,8 +400,8 @@ $studentsStmt->close();
                     <div class="invite-text">
                         <?=$invite[2]?> has invited you to join '<?=$invite[4]?>'
                     </div>
-                    <button class="button" style="background-color:#4CAF50" onclick="acceptInvitation(<?=$invite[0]?>, <?=$invite[3]?>)">Accept</button>
-                    <button class="button" style="background-color:#f44336" onclick="rejectInvitation(<?=$invite[0]?>, <?=$invite[3]?>)">Reject</button>
+                    <button class="button" style="background-color:#4CAF50; margin:5px;" onclick="acceptInvitation(<?=$invite[0]?>, <?=$invite[3]?>)">Accept</button>
+                    <button class="button" style="background-color:#f44336; margin:5px;" onclick="rejectInvitation(<?=$invite[0]?>, <?=$invite[3]?>)">Reject</button>
                 </div>
             <?php } ?>
             <?php if (empty($myInvites)) { ?>
