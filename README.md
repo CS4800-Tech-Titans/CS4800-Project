@@ -13,13 +13,24 @@ Welcome to **GroupUp**, a platform designed to simplify group formation in schoo
 
 - **Creating a Group**:
   - Sign up or log in to your account.
-  - Navigate to the "Create Group" section.
+  - Navigate to the "Create Group" section (this is the + button on the lower right hand corner of the screen).
   - Fill in the group details, including name, description, and add a picture.
   - Submit the form to create your group.
 
 - **Joining a Group**:
   - Browse the list of available groups.
   - Click on a group to view details and contact the group leader to join.
+  - To join the group send a join request by clicking the "Request to Join" button.
+ 
+- **Creating a Class**:
+  - Sign up or log in to your account (must be an instructor account).
+  - Navigate to the Class Creation Form.
+  - Fill in the class details, including class name, instructor name, description, and add a picture.
+  - Submit the form to create your class.
+
+- **Joining a Class**:
+  - Go to "Join a Class" in your Dashboard
+  - Scan Class QR code or enter Class Code
 
 
 ## Technologies Used
